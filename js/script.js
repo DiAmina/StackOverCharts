@@ -17,8 +17,6 @@ function getMeanSalaryByExp(data, continent, pays) {
     for (const element of data) {
         const workExp = parseInt(element['WorkExp']);
         const salary = parseFloat(element['CompTotal']);
-
-        console.log(`Travail Expérience : ${workExp}, Salaire : ${salary}`);
         //
         if (!isNaN(workExp) && !isNaN(salary)) {
             uniqueWorkExp.add(workExp);
@@ -28,6 +26,7 @@ function getMeanSalaryByExp(data, continent, pays) {
             }
             meanSalaries[workExp].totalSalaires += salary;
             meanSalaries[workExp].count += 1;
+            console.log(`Travail Expérience : ${workExp}, Salaire : ${salary}`);
         }
     }
 
