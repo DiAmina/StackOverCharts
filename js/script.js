@@ -11,8 +11,8 @@ function getMeanSalaryByExp(data, continent, pays) {
 
     // Filtrer les données par continent ou par pays
     data = pays
-        ? data.filter(element => element['Continent'] === continent && element['Country'] === pays)
-        : data.filter(element => element['Continent'] === continent);
+        ? data.filter(element['Country'] === pays)
+        : data;
 
     for (const element of data) {
         const workExp = parseInt(element['WorkExp']);
@@ -46,7 +46,9 @@ function getMeanSalaryByExp(data, continent, pays) {
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
     let meanSalaries = getMeanSalaryByExp(output);
-    console.log("Salaire moyen :", meanSalaries);
+     //meanSalaries = getMeanSalaryByExp(output,"" , "France");
+    console.log("Salaire moyen en France :", meanSalaries);
+
     // Mettez ici le reste de votre code qui utilise meanSalaries si nécessaire
 });
 
