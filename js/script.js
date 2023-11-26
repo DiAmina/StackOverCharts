@@ -4,48 +4,51 @@ let request = $.ajax({
     url: "../data/survey_results.json"
 });
 
-// Fonction de calcul de revenu moyen d'un professionnel en fonction de son nombre d'années d'expérience
-function averageSalaryByExperience(data) {
-    let averageSalary = [];
-    for (let i = 0; i < data.length; i++) {
-        let salary = data[i].CompTotal;
-        let workExp = data[i].WorkExp;
-        averageSalary.push(salary / workExp);
-    }
-    return averageSalary;
-}
+// Fonction pour obtenir les salaires moyens en fonction de l'expérience
+function getMeanSalaryByExp(data, continent, pays) {
+    const meanSalaries = {};
+    const uniqueWorkExp = new Set();
 
-// Fonction récupérant les données pour une certaine expérience
-function getWorkExp(data, anneExp) {
-    let workExp = [];
+    // Filtrer les données par continent ou par pays
+    data = pays
+        ? data.filter(element => element['Continent'] === continent && element['Country'] === pays)
+        : data.filter(element => element['Continent'] === continent);
+
     for (const element of data) {
-        if (element['WorkExp'] === anneExp) {
-            workExp.push(element);
+        const workExp = parseInt(element['WorkExp']);
+        const salary = parseFloat(element['CompTotal']);
+
+        console.log(`Travail Expérience : ${workExp}, Salaire : ${salary}`);
+        //
+        if (!isNaN(workExp) && !isNaN(salary)) {
+            uniqueWorkExp.add(workExp);
+
+            if (meanSalaries[workExp] === undefined) {
+                meanSalaries[workExp] = {totalSalaires: 0, count: 0};
+            }
+            meanSalaries[workExp].totalSalaires += salary;
+            meanSalaries[workExp].count += 1;
         }
     }
-    return workExp;
-}
 
-// Fonction récupérant les données pour un certain revenu
-function getRevenu(data, compTotal) {
-    let revenu = [];
-    for (const element of data) {
-        if (element['CompTotal'] === compTotal) {
-            revenu.push(element);
+    const distinctWorkExp = Array.from(uniqueWorkExp);
+    // Calculer la moyenne pour chaque niveau d'expérience
+    Object.keys(meanSalaries).forEach(workExp => {
+        //condition pour éviter la division par 0
+        if (meanSalaries[workExp].count !== 0) {
+            meanSalaries[workExp] = meanSalaries[workExp].totalSalaires / meanSalaries[workExp].count;
+        } else {
+            meanSalaries[workExp] = 0;
         }
-    }
-    return revenu;
+    });
+    return meanSalaries;
 }
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    let averageSalaries = averageSalaryByExperience(output);
-    let workExp = getWorkExp(output, 10);
-    let revenu = getRevenu(output, 285000);
-
-    console.log("Salaire moyen :", averageSalaries);
-    console.log("Revenu :", revenu);
-    console.log("Expérience de travail :", workExp);
+    let meanSalaries = getMeanSalaryByExp(output);
+    console.log("Salaire moyen :", meanSalaries);
+    // Mettez ici le reste de votre code qui utilise meanSalaries si nécessaire
 });
 
 // Code à exécuter en cas d'échec de la requête
