@@ -1,0 +1,266 @@
+[{
+  "code": "USD",
+  "name": "USD\tUnited States dollar",
+  "EquivEuro": 0.92
+  },
+  {
+    "code": "CAD",
+    "name": "CAD\tCanadian dollar",
+    "EquivEuro": 0.66
+  },
+  {
+    "code": "UZS",
+    "name": "UZS\tUzbekistani som",
+    "EquivEuro": 0.00011
+  },
+  {
+    "code": "UGX",
+    "name": "UGX\tUgandan shilling",
+    "EquivEuro": 0.00026
+  },
+  {
+    "code": "AED",
+    "name": "AED United Arab Emirates dirham",
+    "EquivEuro": 0.25
+  },
+  {
+    "code": "SAR",
+    "name": "SAR\tSaudi Arabian riyal",
+    "EquivEuro": 0.24
+  },
+  {
+    "code": "GHS",
+    "name": "GHS\tGhanaian cedi",
+    "EquivEuro": 0.16
+  },
+  {
+    "code": "MYR",
+    "name": "MYR\tMalaysian ringgit",
+    "EquivEuro": 0.21
+  },
+  {
+    "code": "BGN",
+    "name": "BGN\tBulgarian lev",
+    "EquivEuro": 0.51
+  },
+  {
+    "code": "ILS",
+    "name": "ILS\tIsraeli new shekel",
+    "EquivEuro": 0.23
+  },
+  {
+    "code": "AMD",
+    "name": "AMD\tArmenian dram",
+    "EquivEuro": 0.0018
+  },
+  {
+    "code": "CRC",
+    "name": "CRC\tCosta Rican colon",
+    "EquivEuro": 0.0015
+  },
+  {
+    "code": "BAM",
+    "name": "BAM\tBosnia and Herzegovina convertible mark",
+    "EquivEuro": 0.51
+  },
+  {
+    "code": "GBP",
+    "name": "GBP\tPound sterling",
+    "EquivEuro": 1.14
+  },
+  {
+    "code": "HKD",
+    "name": "HKD\tHong Kong dollar",
+    "EquivEuro": 0.12
+  },
+  {
+    "code": "INR",
+    "name": "INR\tIndian rupee",
+    "EquivEuro": 0.012
+  },
+  {
+    "code": "TWD",
+    "name": "TWD\tNew Taiwan dollar",
+    "EquivEuro": 0.029
+  },
+  {
+    "code": "AUD",
+    "name": "AUD\tAustralian dollar",
+    "EquivEuro": 0.61
+  },
+  {
+    "code": "CNY",
+    "name": "CNY\tChinese Yuan Renminbi",
+    "EquivEuro": 0.13
+  },
+  {
+    "code": "JPY",
+    "name": "JPY\tJapanese yen",
+    "EquivEuro": 0.0082
+  },
+  {
+    "code": "BOB",
+    "name": "BOB\tBolivian boliviano",
+    "EquivEuro": 0.13
+  },
+  {
+    "code": "CHF",
+    "name": "CHF\tSwiss franc",
+    "EquivEuro": 0.88
+  },
+  {
+    "code": "PLN",
+    "name": "PLN\tPolish zloty",
+    "EquivEuro": 0.22
+  },
+  {
+    "code": "CUP",
+    "name": "CUP\tCuban peso",
+    "EquivEuro": 0.92
+  },
+  {
+    "code": "XPF",
+    "name": "XPF\tCFP franc",
+    "EquivEuro": 0.0077
+  },
+  {
+    "code": "IRR",
+    "name": "IRR\tIranian rial",
+    "EquivEuro": 0.000022
+  },
+  {
+    "code": "FJD",
+    "name": "FJD\tFijian dollar",
+    "EquivEuro": 0.41
+  },
+  {
+    "code": "GIP",
+    "name": "GIP\tGibraltar pound",
+    "EquivEuro": 1.14
+  },
+  {
+    "code": "UAH",
+    "name": "UAH\tUkrainian hryvnia",
+    "EquivEuro": 0.032
+  },
+  {
+    "code": "ZAR",
+    "name": "ZAR\tSouth African rand",
+    "EquivEuro": 0.051
+  },
+  {
+    "code": "ALL",
+    "name": "ALL\tAlbanian lek",
+    "EquivEuro": 0.0082
+  },
+  {
+    "code": "CDF",
+    "name": "CDF\tCongolese franc",
+    "EquivEuro": 0.00053
+  },
+  {
+    "code": "ANG",
+    "name": "ANG Netherlands Antillean guilder",
+    "EquivEuro": 0.50
+  },
+  {
+    "code": "FKP",
+    "name": "FKP\tFalkland Islands pound",
+    "EquivEuro": 1.14
+  },
+  {
+    "code": "CLP",
+    "name": "CLP\tChilean peso",
+    "EquivEuro": 0.0011
+  },
+  {
+    "code": "ZMW",
+    "name": "ZMW Zambian kwacha",
+    "EquivEuro": 0.051
+  },
+  {
+    "code": "BRL",
+    "name": "BRL\tBrazilian real",
+    "EquivEuro": 0.22
+  },
+  {
+    "code": "DJF",
+    "name": "Djiboutian franc",
+    "EquivEuro": 0.0052
+  },
+  {
+    "code": "HUF",
+    "name": "HUF\tHungarian forint",
+    "EquivEuro": 0.0030
+  },
+  {
+    "code": "AFN",
+    "name": "AFN\tAfghan afghani",
+    "EquivEuro": 0.011
+  },
+  {
+    "code": "THB",
+    "name": "THB\tThai baht",
+    "EquivEuro": 0.028
+  },
+  {
+    "code": "AZN",
+    "name": "AZN\tAzerbaijan manat",
+    "EquivEuro": 0.51
+  },
+  {
+    "code": "YER",
+    "name": "YER\tYemeni rial",
+    "EquivEuro": 0.0037
+  },
+  {
+    "code": "AWG",
+    "name": "AWG\tAruban florin",
+    "EquivEuro": 0.50
+  },
+  {
+    "code": "QAR",
+    "name": "QAR\tQatari riyal",
+    "EquivEuro": 0.24
+  },
+  {
+    "code": "LAK",
+    "name": "LAK\tLao kip",
+    "EquivEuro": 0.00010
+  },
+  {
+    "code": "PEN",
+    "name": "PEN\tPeruvian sol",
+    "EquivEuro": 0.25
+  },
+  {
+    "code" : "BIF",
+    "name" : "BIF\tBurundian franc",
+    "EquivEuro": 0.00049
+  },
+  {
+    "code": "SLL",
+    "name": "SLL\tSierra Leonean leone",
+    "EquivEuro": 0.00010
+  },
+  {
+    "code": "NOK",
+    "name": "NOK\tNorwegian krone",
+    "EquivEuro": 0.091
+  },
+  {
+    "code": "IDR",
+    "name": "IDR\tIndonesian rupiah",
+    "EquivEuro": 0.000059
+  },
+  {
+    "code": "ARS",
+    "name": "ARS\tArgentine peso",
+    "EquivEuro": 0.014
+  },
+  {
+    "code": "COP",
+    "name": "COP\tColombian peso",
+    "EquivEuro": 0.00024
+  }
+]

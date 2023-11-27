@@ -3,6 +3,17 @@ let request = $.ajax({
     url: "../data/survey_results.json",
 });
 
+let currencyRequest = $.ajax({
+    type: "GET",
+    url: "../data/currencies.json"
+});
+
+let currencyData = [];
+
+currencyRequest.done(function (output) {
+    currencyData = output;
+});
+
 function getnFirst(data, n) {
     let first = [];
     for (let i = 0; i < n; i++) {
@@ -59,21 +70,24 @@ function getCountryList(data) {
     return Object.entries(countriesUsers).sort((a, b) => b[1] - a[1])
 }
 
-function  fillTable(data) {
-    let table = document.getElementById('donnees');
+// Fonction renvoyant l'ensemble des Currency utilisées (distinctes)
+function getCurrencyList(data) {
+    let currency = [];
     for (const element of data) {
-        let row = table.insertRow();
-        let id_participant = row.insertCell(0);
-        let devType = row.insertCell(1);
-        let mainBranch = row.insertCell(2);
-        let compTotal = row.insertCell(3);
-        let country = row.insertCell(4);
+        if (!currency.includes(element['Currency'])) {
+            currency.push(element['Currency']);
+        }
+    }
+    // stocker dans un fichier txt avec saut de ligne
+    return currency;
+}
 
-        id_participant.innerHTML = element['ResponseId'];
-        devType.innerHTML = element['DevType'];
-        mainBranch.innerHTML = element['MainBranch']
-        compTotal.innerHTML = element['CompTotal'];
-        country.innerHTML = element['Country'];
+// Fonction renvoyant l'equivalent currency en EUR
+function getConversionEur(data, currency) {
+    for (const element of data) {
+        if (element['name'] === currency) {
+            return element['EquivEuro'];
+        }
     }
 }
 
@@ -105,6 +119,7 @@ request.done(function (output) {
     integrateData(remote[0],'remotecount');
     integrateData(remote[1].toFixed(2),'remotepercentage',"%");
     integrateData(output.length,'totalcount');
+    console.log(getConversionEur(currencyData, "IDR\tIndonesian rupiah"));
     let countries = getCountryList(output);
     let chart = loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes");
 });
