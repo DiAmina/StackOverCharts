@@ -3,7 +3,13 @@ let request = $.ajax({
     url: "../data/survey_results.json",
 });
 
-
+function getnFirst(data, n) {
+    let first = [];
+    for (let i = 0; i < n; i++) {
+        first.push(data[i]);
+    }
+    return first;
+}
 
 // Fonction renvoyant le nombre de personnes travaillant en remote
 function remoteWork(data) {
@@ -53,6 +59,24 @@ function getCountryList(data) {
     return Object.entries(countriesUsers).sort((a, b) => b[1] - a[1])
 }
 
+function  fillTable(data) {
+    let table = document.getElementById('donnees');
+    for (const element of data) {
+        let row = table.insertRow();
+        let id_participant = row.insertCell(0);
+        let devType = row.insertCell(1);
+        let mainBranch = row.insertCell(2);
+        let compTotal = row.insertCell(3);
+        let country = row.insertCell(4);
+
+        id_participant.innerHTML = element['ResponseId'];
+        devType.innerHTML = element['DevType'];
+        mainBranch.innerHTML = element['MainBranch']
+        compTotal.innerHTML = element['CompTotal'];
+        country.innerHTML = element['Country'];
+    }
+}
+
 function loadBarChart(x, y, label) {
     let ctx = document.getElementById('barChart').getContext('2d');
     return new Chart(ctx, {
@@ -63,12 +87,12 @@ function loadBarChart(x, y, label) {
                 label: label,
                 data: y,
                 backgroundColor: [
-                    'rgba(8,14,126,0.8)',
+                    'rgba(16,57,147,0.8)',
                 ],
                 borderColor: [
-                    'rgb(15,48,152)',
+                    'rgb(180,196,245)',
                 ],
-                borderWidth: 1
+                borderWidth: 3
             }]
         },
         options: {}
@@ -83,10 +107,6 @@ request.done(function (output) {
     integrateData(output.length,'totalcount');
     let countries = getCountryList(output);
     let chart = loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes");
-    console.log(countries);
-
-    console.log("Nombre de personnes travaillant en remote :", remote[0]);
-    console.log("Pourcentage de personnes travaillant en remote :", remote[1]);
 });
 
 // Code à exécuter en cas d'échec de la requête
