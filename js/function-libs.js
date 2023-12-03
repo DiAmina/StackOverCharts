@@ -28,6 +28,97 @@ const AMERICA_COUNTRIES = [
     "Canada"
 ];
 
+// LINE CHART
+export function loadLineChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgba(16,57,147,0.8)',
+                ],
+                borderColor: [
+                    'rgb(180,196,245)',
+                ],
+                borderWidth: 3
+            }]
+        },
+        options: {}
+    });
+}
+
+
+// PIE CHART
+export function loadPieChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    })
+}
+
+// BAR CHART
+export function loadBarChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgba(16,57,147,0.8)',
+                ],
+                borderColor: [
+                    'rgb(180,196,245)',
+                ],
+                borderWidth: 3
+            }]
+        },
+        options: {}
+    });
+}
+
+// Fonction renvoyant la liste des pays distincts avec le nombre de personnes
+export function getCountryList(data) {
+    let countriesUsers = {};
+    for (const element of data) {
+        if (countriesUsers[element['Country']] === undefined) {
+            countriesUsers[element['Country']] = 1;
+        } else {
+            countriesUsers[element['Country']] += 1;
+        }
+    }
+    return Object.entries(countriesUsers).sort((a, b) => b[1] - a[1])
+}
+
+// Fonction intégrant les données dans un élément HTML
+export function integrateData(data, id, detail= "") {
+    let element = document.getElementById(id);
+    if (detail === "") {
+        element.innerHTML = data;
+    } else {
+        element.innerHTML = data + " " + detail;
+    }
+}
+
 export function getDevDataByContinent(data, country) {
     let devData = [];
     if (country === 'Europe') {

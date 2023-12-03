@@ -1,172 +1,51 @@
+
+import {
+    getDevDataByContinent, getNbDevSalaryByExpYears,
+    computeMeanSalary, getDevByCountry,
+    getNbDevByExpYears, loadLineChart,
+    loadBarChart, loadPieChart,
+} from './function-libs.js';
+
+
 let request = $.ajax({
     type: "GET",
     url: "../data/survey_results.json",
 });
 
-let currencyRequest = $.ajax({
-    type: "GET",
-    url: "../data/currencies.json"
-});
+function getMeanSalaryByExpYears(data) {
+    let nbDevByExpYears = getNbDevByExpYears(data)
+    let meanSalaryByExpYears = {};
+    for (let yearsExp of Object.keys(nbDevByExpYears)) {
+        meanSalaryByExpYears[yearsExp] = computeMeanSalary(data, yearsExp);
+        if (!isNaN(meanSalaryByExpYears[yearsExp])) {
+            meanSalaryByExpYears[yearsExp] = parseFloat(meanSalaryByExpYears[yearsExp]);
+        }
 
-let currencyData = [];
-
-currencyRequest.done(function (output) {
-    currencyData = output;
-});
-
-function getnFirst(data, n) {
-    let first = [];
-    for (let i = 0; i < n; i++) {
-        first.push(data[i]);
-    }
-    return first;
-}
-
-// Fonction renvoyant le nombre de personnes travaillant en remote
-function remoteWork(data) {
-    let remote = 0;
-    const remoteVariant = ['Hybrid (some remote, some in-person)','Remote'];
-    for (const element of data) {
-        if (remoteVariant.includes(element['RemoteWork'])) {
-            remote++;
+        if (meanSalaryByExpYears[yearsExp] === 0) {
+            meanSalaryByExpYears[yearsExp] = NaN;
         }
     }
-    // pourcentage de personnes travaillant en remote
-    let remotePercentage = remote / data.length * 100;
-    return [remote,remotePercentage];
-}
 
-// Fonction renvoyant les données d'un pays
-function countryData(data, country) {
-    let countryData = [];
-    for (const element of data) {
-        if (element['Country'] === country) {
-            countryData.push(element);
-        }
-    }
-    return countryData;
-}
+    meanSalaryByExpYears["50"] = meanSalaryByExpYears["More than 50 years"];
+    delete meanSalaryByExpYears["More than 50 years"];
 
-// Fonction intégrant les données dans un élément HTML
-function integrateData(data, id, detail= "") {
-    let element = document.getElementById(id);
-    if (detail === "") {
-        element.innerHTML = data;
-    } else {
-        element.innerHTML = data + " " + detail;
-    }
-}
+    meanSalaryByExpYears["0"] = meanSalaryByExpYears["Less than 1 year"];
+    delete meanSalaryByExpYears["Less than 1 year"];
 
-// Fonction renvoyant la liste des pays distincts avec le nombre de personnes
-function getCountryList(data) {
-    let countriesUsers = {};
-    for (const element of data) {
-        if (countriesUsers[element['Country']] === undefined) {
-            countriesUsers[element['Country']] = 1;
-        } else {
-            countriesUsers[element['Country']] += 1;
-        }
-    }
-    return Object.entries(countriesUsers).sort((a, b) => b[1] - a[1])
-}
-
-// Fonction renvoyant l'ensemble des Currency utilisées (distinctes)
-function getCurrencyList(data) {
-    let currency = [];
-    for (const element of data) {
-        if (!currency.includes(element['Currency'])) {
-            currency.push(element['Currency']);
-        }
-    }
-    // stocker dans un fichier txt avec saut de ligne
-    return currency;
-}
-
-// Fonction renvoyant l'equivalent currency en EUR
-function getConversionEur(data, currency) {
-    for (const element of data) {
-        if (element['name'] === currency) {
-            return element['EquivEuro'];
-        }
-    }
-}
-
-function loadBarChart(x, y, label,id) {
-    let ctx = document.getElementById(id).getContext('2d');
-    return new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: x,
-            datasets: [{
-                label: label,
-                data: y,
-                backgroundColor: [
-                    'rgba(16,57,147,0.8)',
-                ],
-                borderColor: [
-                    'rgb(180,196,245)',
-                ],
-                borderWidth: 3
-            }]
-        },
-        options: {}
-    });
-}
-
-function loadPieChart(x, y, label,id) {
-    let ctx = document.getElementById(id).getContext('2d');
-    return new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: x,
-            datasets: [{
-                label: label,
-                data: y,
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-            }]
-        }
-    })
-}
-
-function loadLineChart(x, y, label,id) {
-    let ctx = document.getElementById(id).getContext('2d');
-    return new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: x,
-            datasets: [{
-                label: label,
-                data: y,
-                backgroundColor: [
-                    'rgba(16,57,147,0.8)',
-                ],
-                borderColor: [
-                    'rgb(180,196,245)',
-                ],
-                borderWidth: 3
-            }]
-        },
-        options: {}
-    });
-
+    return meanSalaryByExpYears;
 }
 
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    let remote = remoteWork(output);
-    integrateData(remote[0],'remotecount');
-    integrateData(remote[1].toFixed(2),'remotepercentage',"%");
-    integrateData(output.length,'totalcount');
-    console.log(getConversionEur(currencyData, "IDR\tIndonesian rupiah"));
-    let countries = getCountryList(output);
-    loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes", "barChartReport");
-    loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes", "barChart");
+    const data = getDevDataByContinent(output,"Europe");
+    const data2 = getDevByCountry(data,"France")
+
+    console.log("NB DEV BY EXP : ");
+    console.log(getNbDevSalaryByExpYears(data,"42"));
+
+    console.log("MEAN SALARY BY EXP : ");
+    console.log(getMeanSalaryByExpYears(data2));
 });
 
 // Code à exécuter en cas d'échec de la requête

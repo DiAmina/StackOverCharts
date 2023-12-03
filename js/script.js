@@ -1,14 +1,31 @@
 // Envoi de la requête vers le fichier de données JSON
-import {
-    getDevDataByContinent,
-    getNbDevSalaryByExpYears,
-    computeMeanSalary, getDevByCountry, getNbDevByExpYears
-} from './function-libs.js';
-
 let request = $.ajax({
     type: "GET",
     url: "../data/survey_results.json"
 });
+
+import {
+    getDevDataByContinent, getNbDevSalaryByExpYears,
+    computeMeanSalary, getNbDevByExpYears,
+    loadLineChart, loadBarChart,
+    loadPieChart, integrateData,
+    getCountryList, convertCurrencyToEuro, getDevByCountry
+} from './function-libs.js';
+
+// Fonction renvoyant le nombre de personnes travaillant en remote
+function remoteWork(data) {
+    let remote = 0;
+    const remoteVariant = ['Hybrid (some remote, some in-person)','Remote'];
+    for (const element of data) {
+        if (remoteVariant.includes(element['RemoteWork'])) {
+            remote++;
+        }
+    }
+    // pourcentage de personnes travaillant en remote
+    let remotePercentage = remote / data.length * 100;
+    return [remote,remotePercentage];
+}
+
 
 /*
     * Fonction renvoyant le le salaire moyen des développeurs par années d'expérience
@@ -25,6 +42,10 @@ function getMeanSalaryByExpYears(data) {
         if (!isNaN(meanSalaryByExpYears[yearsExp])) {
             meanSalaryByExpYears[yearsExp] = parseFloat(meanSalaryByExpYears[yearsExp]);
         }
+
+        if (meanSalaryByExpYears[yearsExp] === 0) {
+            meanSalaryByExpYears[yearsExp] = NaN;
+        }
     }
 
     meanSalaryByExpYears["50"] = meanSalaryByExpYears["More than 50 years"];
@@ -38,11 +59,15 @@ function getMeanSalaryByExpYears(data) {
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    const data = getDevDataByContinent(output,"Europe");
-    const data2 = getDevByCountry(data,"France")
+    const data = getDevDataByContinent(output, 'America');
 
-    console.log("MEAN SALARY BY EXP : ");
-    console.log(getMeanSalaryByExpYears(data2));
+    let remote = remoteWork(output);
+    integrateData(remote[0],'remotecount');
+    integrateData(remote[1].toFixed(2),'remotepercentage',"%");
+    integrateData(output.length,'totalcount');
+    let countries = getCountryList(output);
+    loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes", "barChartReport");
+
 });
 
 // Code à exécuter en cas d'échec de la requête
