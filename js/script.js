@@ -2,7 +2,7 @@
 import {
     getDevDataByContinent,
     getNbDevSalaryByExpYears,
-    computeMeanSalary, getDevByCountry
+    computeMeanSalary, getDevByCountry, getNbDevByExpYears
 } from './function-libs.js';
 
 let request = $.ajax({
@@ -18,7 +18,7 @@ let request = $.ajax({
     * @return meanSalaryByExpYears: salaire moyen des développeurs par années d'expérience
  */
 function getMeanSalaryByExpYears(data) {
-    let nbDevByExpYears = getNbDevSalaryByExpYears(data, "7")
+    let nbDevByExpYears = getNbDevByExpYears(data)
     let meanSalaryByExpYears = {};
     for (let yearsExp of Object.keys(nbDevByExpYears)) {
         meanSalaryByExpYears[yearsExp] = computeMeanSalary(data, yearsExp);
@@ -30,9 +30,12 @@ function getMeanSalaryByExpYears(data) {
 request.done(function (output) {
     const data = getDevDataByContinent(output,"Europe");
     const data2 = getDevByCountry(data,"France")
-    console.log(data2);
-    console.log(getNbDevSalaryByExpYears(data,"7"));
-    console.log(computeMeanSalary(data,"7"));
+
+    console.log("DEBUG 1 :");
+    console.log(getNbDevSalaryByExpYears(data2,"41"));
+
+    console.log("MEAN SALARY BY EXP : ");
+    console.log(getMeanSalaryByExpYears(data2));
 });
 
 // Code à exécuter en cas d'échec de la requête

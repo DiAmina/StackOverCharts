@@ -100,7 +100,7 @@ export function getNbDevSalaryByExpYears(data, yearsExp){
     for (const developer of data) {
         let yearsExperience = developer['YearsCodePro'];
         if (yearsExperience === yearsExp) {
-            if (developer['CompTotal'] !== 'NA') {
+            if (!isNaN(parseFloat(developer['CompTotal']))) {
                 const currency = developer['Currency'];
                 if (currency !== 'EUR European Euro') {
                     devSalaries.push((parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2));
@@ -120,7 +120,10 @@ export function computeMeanSalary(data, yearsExp) {
     for (const salary of salaries) {
         sum += parseFloat(salary);
     }
-    return (sum / salaries.length).toFixed(2);
+
+    let result = (sum / salaries.length).toFixed(2)
+
+    return result === 'NaN' ? "Pas de données !" : result;
 }
 
 
