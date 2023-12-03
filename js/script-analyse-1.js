@@ -6,8 +6,15 @@ let request = $.ajax({
 
 import {
     getDevDataByContinent,
-    computeMeanSalary, getNbDevByExpYears,
-    getDevByCountry, loadLineChartNaN, getDevSalaryByExpYears, convertCurrencyToEuro, minMaxSalary
+    computeMeanSalary,
+    getNbDevByExpYears,
+    getDevByCountry,
+    loadLineChartNaN,
+    getDevSalaryByExpYears,
+    convertCurrencyToEuro,
+    minMaxSalary,
+    createSelect,
+    AMERICA_COUNTRIES, createBr
 } from './functions-libs.js';
 
 /**
@@ -40,10 +47,13 @@ function getMeanSalaryByExpYears(data) {
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    const dataContinent = getDevDataByContinent(output, 'Europe');
-    const dataPays = getDevByCountry(dataContinent, 'France');
+    const dataContinent = getDevDataByContinent(output, 'Amérique');
+    const dataPays = getDevByCountry(dataContinent, 'United States of America');
     let results = getMeanSalaryByExpYears(dataPays);
     loadLineChartNaN(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','barChartReport');
+    createSelect(["Amérique","Europe"],"selectorContinent","selector");
+    createBr("selector")
+    createSelect(AMERICA_COUNTRIES,"selectorPays","selector");
 });
 
 // Code à exécuter en cas d'échec de la requête

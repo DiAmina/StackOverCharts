@@ -10,7 +10,7 @@ currencyRequest.done(function (output) {
 });
 
 // Liste des pays d'Europe
-const EUROPE_COUNTRIES = [
+export const EUROPE_COUNTRIES = [
     "Germany",
     "United Kingdom of Great Britain and Northern Ireland",
     "France",
@@ -25,7 +25,7 @@ const EUROPE_COUNTRIES = [
 ];
 
 // Liste des pays d'Amérique
-const AMERICA_COUNTRIES = [
+export const AMERICA_COUNTRIES = [
     "United States of America",
     "Canada"
 ];
@@ -174,6 +174,27 @@ export function integrateData(data, id, detail= "") {
     }
 }
 
+export function createSelect(options,id,parentId) {
+    const divSelect = document.getElementById(parentId);
+    const select = document.createElement('select');
+    select.id = id;
+    select.className = "form-select form-select-sm";
+    divSelect.appendChild(select);
+
+    for (const option of options) {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.innerHTML = option;
+        select.appendChild(opt);
+    }
+}
+
+export function createBr(parentId) {
+    const divSelect = document.getElementById(parentId);
+    const br = document.createElement('br');
+    divSelect.appendChild(br);
+}
+
 /**
  * Retourne les données des développeurs en fonction du continent
  * @param data - Données JSON
@@ -188,7 +209,7 @@ export function getDevDataByContinent(data, country) {
                 devData.push(developer);
             }
         }
-    } else if (country === 'America') {
+    } else if (country === 'Amérique') {
         for (const developer of data) {
             if (AMERICA_COUNTRIES.includes(developer['Country'])) {
                 devData.push(developer);
