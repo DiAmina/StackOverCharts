@@ -9,6 +9,7 @@ currencyRequest.done(function (output) {
     currencyData = output;
 });
 
+// Liste des pays d'Europe
 const EUROPE_COUNTRIES = [
     "Germany",
     "United Kingdom of Great Britain and Northern Ireland",
@@ -23,6 +24,7 @@ const EUROPE_COUNTRIES = [
     "Ireland",
 ];
 
+// Liste des pays d'Amérique
 const AMERICA_COUNTRIES = [
     "United States of America",
     "Canada"
@@ -51,6 +53,38 @@ export function loadLineChart(x, y, label,id) {
     });
 }
 
+// LINE CHART LINE SEGMENT STYLING
+const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
+const genericOptions = {
+    fill: false,
+    interaction: {
+        intersect: false
+    },
+    radius: 4,
+};
+
+// LINE CHART WITH NaN data
+export function loadLineChartNaN(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                borderColor: 'rgb(75, 192, 192)',
+                segment: {
+                    borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, 'rgb(192,75,75)'),
+                    borderDash: ctx => skipped(ctx, [6, 6]),
+                },
+                spanGaps: true
+            }]
+        },
+        options: genericOptions
+    });
+}
 
 // PIE CHART
 export function loadPieChart(x, y, label,id) {
@@ -96,8 +130,24 @@ export function loadBarChart(x, y, label,id) {
     });
 }
 
-// Fonction renvoyant la liste des pays distincts avec le nombre de personnes
-export function getCountryList(data) {
+/**
+ * Met à jour un graphique donné
+ * @param chart - Graphique
+ * @param x - Données en abscisse
+ * @param y - Données en ordonnée
+ */
+export function updateChart(chart, x, y) {
+    chart.data.labels = x;
+    chart.data.datasets[0].data = y;
+    chart.update();
+}
+
+/**
+ * Renvoie le nombre de développeurs par pays
+ * @return {Array}: liste des pays avec le nombre de développeurs
+ * @param data
+ */
+export function getNbDevByCountry(data) {
     let countriesUsers = {};
     for (const element of data) {
         if (countriesUsers[element['Country']] === undefined) {
@@ -109,7 +159,12 @@ export function getCountryList(data) {
     return Object.entries(countriesUsers).sort((a, b) => b[1] - a[1])
 }
 
-// Fonction intégrant les données dans un élément HTML
+/**
+ * Intègre les données dans une balise HTML
+ * @param data
+ * @param {string} id - ID de la balise HTML
+ * @param {string} detail - Détail à ajouter à la fin de la donnée
+ */
 export function integrateData(data, id, detail= "") {
     let element = document.getElementById(id);
     if (detail === "") {
@@ -119,6 +174,12 @@ export function integrateData(data, id, detail= "") {
     }
 }
 
+/**
+ * Retourne les données des développeurs en fonction du continent
+ * @param data - Données JSON
+ * @param country - Continent
+ * @returns {*[]} : liste des développeurs
+ */
 export function getDevDataByContinent(data, country) {
     let devData = [];
     if (country === 'Europe') {
@@ -139,6 +200,12 @@ export function getDevDataByContinent(data, country) {
     return devData;
 }
 
+/**
+ * Renvoie les données des développeurs en fonction du pays
+ * @param data - Données JSON du continent
+ * @param country - Pays
+ * @returns {*[]} : liste des développeurs
+ */
 export function getDevByCountry(data, country) {
     let devData = [];
     for (const developer of data) {
@@ -149,6 +216,11 @@ export function getDevByCountry(data, country) {
     return devData;
 }
 
+/**
+ * Convertit une devise en euro
+ * @param currency - Devise
+ * @returns {*} - Valeur en euro
+ */
 export function convertCurrencyToEuro(currency) {
     for (const currencyDataElement of currencyData) {
         if (currencyDataElement['name'] === currency) {
@@ -157,10 +229,10 @@ export function convertCurrencyToEuro(currency) {
     }
 }
 
-/*
-    * Fonction renvoyant le nombre de développeurs par années d'expérience
-    * @param data: données JSON
-    * @return nbDevByExpYears: dictionnaire avec le nombre de développeurs par années d'expérience
+/**
+ * Renvoie le nombre de développeurs par années d'expérience
+ * @param data
+ * @returns {{}}
  */
 export function getNbDevByExpYears(data) {
     let nbDevByExpYears = {};
@@ -179,24 +251,32 @@ export function getNbDevByExpYears(data) {
     return nbDevByExpYears;
 }
 
-/*
-    * Fonction renvoyant les salaires des développeurs par années d'expérience
-    * Attention: Sachant que certains développeur n'ont pas renseigné leur salaire (CompTotal = 'NA'), il il ne sera pas pris en compte
-    * @param data: données JSON
-    * @param yearsExp: années d'expérience
-    * @return devSalaries: liste des salaires des développeurs par années d'expérience
+/**
+ * Renvoie les salaires des développeurs de l'année d'expérience donnée
+ *
+ * Attention: Sachant que certains développeur n'ont pas renseigné leur salaire (CompTotal = 'NA'),
+ * ils ne seront pas pris en compte
+ * @param data - Données JSON
+ * @param yearExp - Année d'expérience
+ * @returns {*[]} - Liste des salaires
  */
-export function getNbDevSalaryByExpYears(data, yearsExp){
+export function getDevSalaryByExpYears(data, yearExp){
     let devSalaries = []
     for (const developer of data) {
         let yearsExperience = developer['YearsCodePro'];
-        if (yearsExperience === yearsExp) {
+        if (yearsExperience === yearExp) {
             if (!isNaN(parseFloat(developer['CompTotal']))) {
-                const currency = developer['Currency'];
+                let currency = developer['Currency'];
+                let value = null;
                 if (currency !== 'EUR European Euro') {
-                    devSalaries.push((parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2));
+                    value = (parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2);
                 } else {
-                    devSalaries.push(parseFloat(developer['CompTotal']).toFixed(2));
+                    value = parseFloat(developer['CompTotal']).toFixed(2);
+                }
+
+                // On ne prend pas en compte les salaires supérieurs à 1 000 000 € par an (abbération)
+                if (value < 1000000) {
+                    devSalaries.push(value);
                 }
             }
         }
@@ -204,8 +284,14 @@ export function getNbDevSalaryByExpYears(data, yearsExp){
     return devSalaries;
 }
 
+/**
+ * Renvoie le salaire moyen des développeurs en fonction de leur année d'expérience
+ * @param data - Données JSON
+ * @param yearsExp - Année d'expérience
+ * @returns {number|string} - Salaire moyen
+ */
 export function computeMeanSalary(data, yearsExp) {
-    let salaries = getNbDevSalaryByExpYears(data, yearsExp);
+    let salaries = getDevSalaryByExpYears(data, yearsExp);
 
     let sum = 0;
     for (const salary of salaries) {
@@ -217,5 +303,13 @@ export function computeMeanSalary(data, yearsExp) {
     return result === 'NaN' ? NaN : result;
 }
 
-
-
+/**
+ * Renvoie le salaire le plus petit et le plus grand
+ * @param data - Données JSON
+ * @returns {number[]} - [Salaire minimum, Salaire maximum]
+ */
+export function minMaxSalary(data) {
+    let min = Math.min(...data);
+    let max = Math.max(...data);
+    return [min, max];
+}

@@ -221,54 +221,29 @@
         <!-- Left side columns -->
         <div class="col-lg-8">
           <div class="row">
-
-            <!-- Total Card -->
-            <div class="col-xxl-5 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title">Données récoltées</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi-graph-up"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 id="totalcount">Chargement...</h6>
-                      <span class="text-success small pt-1 fw-bold" id="tester"></span> <span class="text-muted small pt-2 ps-1">En tout</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Total Card -->
-
-            <!-- Remote Card -->
-            <div class="col-xxl-6 col-md-6">
-              <div class="card info-card revenue-card">
-                <div class="card-body">
-                  <h5 class="card-title">Employés <span>| En remote</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi-headset-vr"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 id="remotecount">Chargement...</h6>
-                      <span class="text-success small pt-1 fw-bold" id="remotepercentage">Chargement...</span> <span class="text-muted small pt-2 ps-1">des participants</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Remote Card -->
-
             <!-- Reports -->
             <div class="col-xxl-12">
               <div class="card">
 
                 <div class="card-body">
-                  <h5 class="card-title">Rapport <span>| Répartition des participants par pays</span></h5>
+                  <h5 class="card-title">Rapport <span>| Revenu moyen d'un professionnel en fonction de son nombre d’années d’expérience</span></h5>
                   <!-- Line Chart -->
-                  <canvas id="barChart"></canvas>
+                  <canvas id="barChartReport"></canvas>
+                  <div class="card-footer">
+                    <div class="row-cols-2" id="selector">
+                      <select class="form-select form-select-sm" aria-label="Default select example">
+                        <option value="America" selected>Amérique</option>
+                        <option value="Europe">Europe</option>
+                      </select>
+                      <br>
+                      <select class="form-select form-select-sm" aria-label="Default select example">
+                        <option value="None"></option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                      </select>
+                    </div>
+                  </div>
                   <!-- End Line Chart -->
                 </div>
               </div>
@@ -295,7 +270,7 @@
   <script src="../data/assets/tinymce/tinymce.min.js"></script>
 
   <script src="../js/main.js"></script>
-  <script src="../js/script_test.js"></script>
+  <script type="module" src="../js/script-analyse-1.js"></script>
 
 </body>
 
