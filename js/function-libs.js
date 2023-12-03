@@ -123,20 +123,5 @@ export function computeMeanSalary(data, yearsExp) {
     return (sum / salaries.length).toFixed(2);
 }
 
-/*
-    * Fonction renvoyant le le salaire moyen des développeurs par années d'expérience
-    * Attention: Sachant que certains développeur n'ont pas renseigné leur salaire (CompTotal = 'NA'), il il ne sera pas pris en compte
-    * @param data: données JSON
-    * @param yearsExp: années d'expérience
-    * @return meanSalaryByExpYears: salaire moyen des développeurs par années d'expérience
- */
-export function getMeanSalaryByExpYears(data) {
-    let nbDevByExpYears = getNbDevSalaryByExpYears(data, "7")
-    let meanSalaryByExpYears = {};
-    for (let yearsExp of Object.keys(nbDevByExpYears)) {
-        meanSalaryByExpYears[yearsExp] = computeMeanSalary(data, yearsExp);
-    }
-    return meanSalaryByExpYears;
-}
 
 
