@@ -91,8 +91,8 @@ function getConversionEur(data, currency) {
     }
 }
 
-function loadBarChart(x, y, label) {
-    let ctx = document.getElementById('barChart').getContext('2d');
+function loadBarChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
     return new Chart(ctx, {
         type: 'bar',
         data: {
@@ -113,6 +113,50 @@ function loadBarChart(x, y, label) {
     });
 }
 
+function loadPieChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    })
+}
+
+function loadLineChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgba(16,57,147,0.8)',
+                ],
+                borderColor: [
+                    'rgb(180,196,245)',
+                ],
+                borderWidth: 3
+            }]
+        },
+        options: {}
+    });
+
+}
+
+
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
     let remote = remoteWork(output);
@@ -121,7 +165,8 @@ request.done(function (output) {
     integrateData(output.length,'totalcount');
     console.log(getConversionEur(currencyData, "IDR\tIndonesian rupiah"));
     let countries = getCountryList(output);
-    let chart = loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes");
+    loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes", "barChartReport");
+    loadBarChart(countries.map(x => x[0]), countries.map(x => x[1]), "Nombre de personnes", "barChart");
 });
 
 // Code à exécuter en cas d'échec de la requête
