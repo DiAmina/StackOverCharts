@@ -123,7 +123,7 @@ export function computeMeanSalary(data, yearsExp) {
 
     let result = (sum / salaries.length).toFixed(2)
 
-    return result === 'NaN' ? "Pas de données !" : result;
+    return result === 'NaN' ? NaN : result;
 }
 
 

@@ -22,7 +22,17 @@ function getMeanSalaryByExpYears(data) {
     let meanSalaryByExpYears = {};
     for (let yearsExp of Object.keys(nbDevByExpYears)) {
         meanSalaryByExpYears[yearsExp] = computeMeanSalary(data, yearsExp);
+        if (!isNaN(meanSalaryByExpYears[yearsExp])) {
+            meanSalaryByExpYears[yearsExp] = parseFloat(meanSalaryByExpYears[yearsExp]);
+        }
     }
+
+    meanSalaryByExpYears["50"] = meanSalaryByExpYears["More than 50 years"];
+    delete meanSalaryByExpYears["More than 50 years"];
+
+    meanSalaryByExpYears["0"] = meanSalaryByExpYears["Less than 1 year"];
+    delete meanSalaryByExpYears["Less than 1 year"];
+
     return meanSalaryByExpYears;
 }
 
@@ -30,9 +40,6 @@ function getMeanSalaryByExpYears(data) {
 request.done(function (output) {
     const data = getDevDataByContinent(output,"Europe");
     const data2 = getDevByCountry(data,"France")
-
-    console.log("DEBUG 1 :");
-    console.log(getNbDevSalaryByExpYears(data2,"41"));
 
     console.log("MEAN SALARY BY EXP : ");
     console.log(getMeanSalaryByExpYears(data2));
