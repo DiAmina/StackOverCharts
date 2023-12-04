@@ -14,7 +14,7 @@ import {
     convertCurrencyToEuro,
     minMaxSalary,
     createSelect,
-    AMERICA_COUNTRIES, createBr
+    AMERICA_COUNTRIES, createBr, EUROPE_COUNTRIES
 } from './functions-libs.js';
 
 /**
@@ -47,13 +47,14 @@ function getMeanSalaryByExpYears(data) {
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    const dataContinent = getDevDataByContinent(output, 'Amérique');
-    const dataPays = getDevByCountry(dataContinent, 'United States of America');
+    const dataContinent = getDevDataByContinent(output, 'Europe');
+    const dataPays = getDevByCountry(dataContinent, 'Netherlands');
     let results = getMeanSalaryByExpYears(dataPays);
     loadLineChartNaN(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','barChartReport');
+
     createSelect(["Amérique","Europe"],"selectorContinent","selector");
     createBr("selector")
-    createSelect(AMERICA_COUNTRIES,"selectorPays","selector");
+    createSelect(EUROPE_COUNTRIES,"selectorPays","selector");
 });
 
 // Code à exécuter en cas d'échec de la requête

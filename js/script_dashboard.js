@@ -25,8 +25,6 @@ function remoteWork(data) {
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    const data = getDevDataByContinent(output, 'America');
-
     let remote = remoteWork(output);
     integrateData(remote[0],'remotecount');
     integrateData(remote[1].toFixed(2),'remotepercentage',"%");
