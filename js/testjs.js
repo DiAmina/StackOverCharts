@@ -27,10 +27,22 @@ let request = $.ajax({
     return meanSalaryByEdu;
 }
 
+/**
+ * Renvoie le salaire le plus petit et le plus grand
+ * @param data - Données JSON
+ * @returns {number[]} - [Salaire minimum, Salaire maximum]
+ */
+function minMaxSalary(data) {
+    let min = Math.min(...data);
+    let max = Math.max(...data);
+    return [min, max];
+}
+
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
     const data = getNbDevByEdu(output, '');
     console.log(getMeanSalaryByEdu(output));
+    console.log(minMaxSalary(getNbDevSalaryByEdu(output,'Something else')))
 });
 
 // Code à exécuter en cas d'échec de la requête

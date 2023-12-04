@@ -1,26 +1,26 @@
-/*
-Fonction  retournant le nombre de developpeur par niveau d'étude
-@param data: données JSON
-@return nbDevByEdu: dictionnaire avec le nombre de développeurs par niveau d'étude
- */
- import {convertCurrencyToEuro} from "./functions-libs.js";
+import {convertCurrencyToEuro} from "./functions-libs.js";
 
+/**
+ * Fonction renvoyant le nombre de développeurs par niveau d'étude
+ * @param data - Données JSON
+ * @returns {{}} - Nombre de développeurs par niveau d'étude [edu: nbDev]
+ */
 export function getNbDevByEdu(data) {
      let nbDevByEdu = {};
-        for (const developer of data) {
-            let edu = developer['EdLevel'];
-            if (edu === 'NA') {
-                continue;
-            }
+     for (const developer of data) {
+         let edu = developer['EdLevel'];
+         if (edu === 'NA') {
+             continue;
+         }
 
-            if (nbDevByEdu[edu] === undefined) {
-                nbDevByEdu[edu] = 1;
-            } else {
-                nbDevByEdu[edu] += 1;
+         if (nbDevByEdu[edu] === undefined) {
+             nbDevByEdu[edu] = 1;
+         } else {
+             nbDevByEdu[edu] += 1;
             }
-        }
-        return nbDevByEdu;
-    }
+     }
+     return nbDevByEdu;
+}
 
     /*
         * Fonction renvoyant les salaire moyens des développeurs par niveau d'étude
@@ -32,14 +32,20 @@ export function getNbDevByEdu(data) {
 export function getNbDevSalaryByEdu(data, edu){
     let devSalaries = [];
     for (const developer of data) {
-        let yearsExperience = developer['EdLevel'];
-        if (yearsExperience === edu) {
-            if (developer['CompTotal'] !== 'NA') {
-                const currency = developer['Currency'];
+        let eduLevel = developer['EdLevel'];
+        if (eduLevel === edu) {
+            if (!isNaN(parseFloat(developer['CompTotal']))) {
+                let currency = developer['Currency'];
+                let value = null;
                 if (currency !== 'EUR European Euro') {
-                    devSalaries.push((parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2));
+                    value = (parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2);
                 } else {
-                    devSalaries.push(parseFloat(developer['CompTotal']).toFixed(2));
+                    value = parseFloat(developer['CompTotal']).toFixed(2);
+                }
+
+                // On ne prend pas en compte les salaires supérieurs à 1 000 000 € par an (abbération)
+                if (value < 1000000) {
+                    devSalaries.push(value);
                 }
             }
         }
