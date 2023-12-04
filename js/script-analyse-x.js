@@ -5,32 +5,23 @@ let request = $.ajax({
 });
 
 import {
-    getDevDataByContinent,
     getNbDevSalaryByEdu,
-    getNbDevByEdu,
-    computeMeanSalaryEtu,
-    getMeanSalaryByEdu,
-    convertCurrencyToEuro,
-    minMaxSalary,
-
-} from './script2';
+} from './script2.js';
 
 import {
-    createSelect,
+    getDevDataByContinent,
     loadPolarAreaChart,
     AMERICA_COUNTRIES,
-    createBr,
     EUROPE_COUNTRIES,
-    getNbDevByExpYears,
     computeMeanSalary,
-    getDevByCountry,
-} from "./functions-libs";
+    getDevByCountry,getNbDevById,
+} from "./functions-libs.js";
 
 function getMeanSalaryByEdu(data) {
-    let nbDevByExpEdu = getNbDevByEdu(data)
+    let nbDevByExpEdu = getNbDevById(data, 'EdLevel')
     let meanSalaryByEdu = {};
     for (let edulevel of Object.keys(nbDevByExpEdu)) {
-        meanSalaryByEdu[edulevel] = computeMeanSalary(data, edulevel);
+        meanSalaryByEdu[edulevel] = computeMeanSalary(data, edulevel, 'EdLevel');
         if (!isNaN(meanSalaryByEdu[edulevel])) {
             meanSalaryByEdu[edulevel] = parseFloat(meanSalaryByEdu[edulevel]);
         }
@@ -39,6 +30,7 @@ function getMeanSalaryByEdu(data) {
             meanSalaryByEdu[edulevel] = NaN;
         }
     }
+    return meanSalaryByEdu;
 }
 
 // Code à exécuter en cas de succès de la requête
@@ -46,11 +38,8 @@ request.done(function (output) {
     const dataContinent = getDevDataByContinent(output, 'Europe');
     const dataPays = getDevByCountry(dataContinent, 'Netherlands');
     let results = getMeanSalaryByEdu(dataPays);
-    loadPolarAreaChart(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','barChartporalAreaChartReportReport');
-
-    createSelect(["Amérique","Europe"],"selectorContinent","selector");
-    createBr("selector")
-    createSelect(EUROPE_COUNTRIES,"selectorPays","selector");
+    console.log(results);
+    loadPolarAreaChart(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','poralAreaChartReport');
 });
 
 // Code à exécuter en cas d'échec de la requête

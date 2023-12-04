@@ -7,14 +7,12 @@ let request = $.ajax({
 import {
     getDevDataByContinent,
     computeMeanSalary,
-    getNbDevByExpYears,
+    getNbDevById,
     getDevByCountry,
     loadLineChartNaN,
-    getDevSalaryByExpYears,
-    convertCurrencyToEuro,
-    minMaxSalary,
     createSelect,
-    AMERICA_COUNTRIES, createBr, EUROPE_COUNTRIES
+    AMERICA_COUNTRIES, createBr,
+    EUROPE_COUNTRIES, loadPolarAreaChart
 } from './functions-libs.js';
 
 /**
@@ -23,10 +21,10 @@ import {
  * @returns {{}} - Moyenne des salaires par années d'expérience [yearsExp: meanSalary]
  */
 function getMeanSalaryByExpYears(data) {
-    let nbDevByExpYears = getNbDevByExpYears(data)
+    let nbDevByExpYears = getNbDevById(data, 'YearsCodePro')
     let meanSalaryByExpYears = {};
     for (let yearsExp of Object.keys(nbDevByExpYears)) {
-        meanSalaryByExpYears[yearsExp] = computeMeanSalary(data, yearsExp);
+        meanSalaryByExpYears[yearsExp] = computeMeanSalary(data, yearsExp, 'YearsCodePro');
         if (!isNaN(meanSalaryByExpYears[yearsExp])) {
             meanSalaryByExpYears[yearsExp] = parseFloat(meanSalaryByExpYears[yearsExp]);
         }
@@ -45,13 +43,29 @@ function getMeanSalaryByExpYears(data) {
     return meanSalaryByExpYears;
 }
 
+function getMeanSalaryByEdu(data) {
+    let nbDevByExpEdu = getNbDevById(data, 'EdLevel')
+    let meanSalaryByEdu = {};
+    for (let edulevel of Object.keys(nbDevByExpEdu)) {
+        meanSalaryByEdu[edulevel] = computeMeanSalary(data, edulevel, 'EdLevel');
+        if (!isNaN(meanSalaryByEdu[edulevel])) {
+            meanSalaryByEdu[edulevel] = parseFloat(meanSalaryByEdu[edulevel]);
+        }
+
+        if (meanSalaryByEdu [edulevel] === 0) {
+            meanSalaryByEdu[edulevel] = NaN;
+        }
+    }
+    return meanSalaryByEdu;
+}
+
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
     const dataContinent = getDevDataByContinent(output, 'Europe');
     const dataPays = getDevByCountry(dataContinent, 'Netherlands');
     let results = getMeanSalaryByExpYears(dataPays);
     loadLineChartNaN(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','barChartReport');
-
+    loadPolarAreaChart(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','poralAreaChartReport');
     createSelect(["Amérique","Europe"],"selectorContinent","selector");
     createBr("selector")
     createSelect(EUROPE_COUNTRIES,"selectorPays","selector");

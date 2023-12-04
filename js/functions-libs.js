@@ -53,20 +53,10 @@ export function loadLineChart(x, y, label,id) {
     });
 }
 
-// LINE CHART LINE SEGMENT STYLING
-const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
-const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
-const genericOptions = {
-    fill: false,
-    interaction: {
-        intersect: false
-    },
-    radius: 4,
-};
-
 // POLAR AREA CHART
 export function loadPolarAreaChart(x, y, label,id) {
     let ctx = document.getElementById(id).getContext('2d');
+    console.log("OK !");
     return new Chart(ctx, {
         type: 'polarArea',
         data: {
@@ -75,9 +65,14 @@ export function loadPolarAreaChart(x, y, label,id) {
                 label: label,
                 data: y,
                 backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
+                    'rgba(16,57,147,0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 205, 86,0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255,64,64,0.6)',
                 ],
                 hoverOffset: 4
             }]
@@ -88,6 +83,15 @@ export function loadPolarAreaChart(x, y, label,id) {
 // LINE CHART WITH NaN data
 export function loadLineChartNaN(x, y, label,id) {
     let ctx = document.getElementById(id).getContext('2d');
+    const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+    const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
+    const genericOptions = {
+        fill: false,
+        interaction: {
+            intersect: false
+        },
+        radius: 4,
+    };
     return new Chart(ctx, {
         type: 'line',
         data: {
@@ -272,41 +276,43 @@ export function convertCurrencyToEuro(currency) {
 }
 
 /**
- * Renvoie le nombre de développeurs par années d'expérience
- * @param data
- * @returns {{}}
+ * Renvoie le nombre de développeurs par id donnée
+ * @param data - Données JSON
+ * @param attribut - Attribut à prendre en compte
+ * @returns {{}} - Nombre de développeurs par id [id: nbDev]
  */
-export function getNbDevByExpYears(data) {
-    let nbDevByExpYears = {};
+export function getNbDevById(data,attribut) {
+    let results = {};
     for (const developer of data) {
-        let yearExperience = developer['YearsCodePro'];
-        if (yearExperience === 'NA') {
+        let label = developer[attribut];
+        if (label === 'NA') {
             continue;
         }
 
-        if (nbDevByExpYears[yearExperience] === undefined) {
-            nbDevByExpYears[yearExperience] = 1;
+        if (results[label] === undefined) {
+            results[label] = 1;
         } else {
-            nbDevByExpYears[yearExperience] += 1;
+            results[label] += 1;
         }
     }
-    return nbDevByExpYears;
+    return results;
 }
 
 /**
- * Renvoie les salaires des développeurs de l'année d'expérience donnée
+ * Renvoie les salaires des développeurs de l'attribut donné
  *
  * Attention: Sachant que certains développeur n'ont pas renseigné leur salaire (CompTotal = 'NA'),
  * ils ne seront pas pris en compte
  * @param data - Données JSON
- * @param yearExp - Année d'expérience
+ * @param value - valeur de l'attribut
+ * @param attribut - Attribut à prendre en compte
  * @returns {*[]} - Liste des salaires
  */
-export function getDevSalaryByExpYears(data, yearExp){
+export function getDevSalaryById(data, value , attribut){
     let devSalaries = []
     for (const developer of data) {
-        let yearsExperience = developer['YearsCodePro'];
-        if (yearsExperience === yearExp) {
+        let attributData = developer[attribut];
+        if (attributData === value) {
             if (!isNaN(parseFloat(developer['CompTotal']))) {
                 let currency = developer['Currency'];
                 let value = null;
@@ -327,21 +333,17 @@ export function getDevSalaryByExpYears(data, yearExp){
 }
 
 /**
- * Renvoie le salaire moyen des développeurs en fonction de leur année d'expérience
+ * Renvoie le salaire moyen des développeurs en fonction de l'attribut donné
  * @param data - Données JSON
- * @param yearsExp - Année d'expérience
+ * @param value - Valeur de l'attribut
+ * @param attribut - Attribut à prendre en compte
  * @returns {number|string} - Salaire moyen
  */
-export function computeMeanSalary(data, yearsExp) {
-    let salaries = getDevSalaryByExpYears(data, yearsExp);
-
+export function computeMeanSalary(data, value, attribut) {
+    let salaries = getDevSalaryById(data, value, attribut);
     let sum = 0;
-    for (const salary of salaries) {
-        sum += parseFloat(salary);
-    }
-
+    for (const salary of salaries) {sum += parseFloat(salary);}
     let result = (sum / salaries.length).toFixed(2)
-
     return result === 'NaN' ? NaN : result;
 }
 
