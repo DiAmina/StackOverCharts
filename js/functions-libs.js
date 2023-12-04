@@ -64,6 +64,27 @@ const genericOptions = {
     radius: 4,
 };
 
+// POLAR AREA CHART
+export function loadPolarAreaChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'polarArea',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    })
+}
+
 // LINE CHART WITH NaN data
 export function loadLineChartNaN(x, y, label,id) {
     let ctx = document.getElementById(id).getContext('2d');
