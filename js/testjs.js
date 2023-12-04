@@ -53,11 +53,3 @@ request.fail(function (httpError) {
     let code_label = http_error.statusText;
     alert("Erreur " + code + " (" + code_label + ") : " + server_msg);
 });
-
-
-
-
-
-
-
-
