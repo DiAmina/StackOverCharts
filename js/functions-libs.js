@@ -199,18 +199,76 @@ export function integrateData(data, id, detail= "") {
     }
 }
 
-export function createSelect(options,id,parentId) {
+/**
+ * Crée un selecteur HTML
+ * @param parentId - ID du parent
+ * @param id - ID du selecteur
+ * @param selectFromId - ID du selecteur à partir duquel on crée le selecteur
+ */
+export function createSelect(parentId,id, selectFromId) {
     const divSelect = document.getElementById(parentId);
+    const parentSelected = document.getElementById(selectFromId).options[0].value;
     const select = document.createElement('select');
     select.id = id;
-    select.className = "form-select form-select-sm";
+    select.className = "form-select form-select-sm mb-2";
     divSelect.appendChild(select);
+    let voidOption = document.createElement('option');
+    voidOption.value = "none";
+    voidOption.text = "";
+    select.appendChild(voidOption);
 
-    for (const option of options) {
-        const opt = document.createElement('option');
-        opt.value = option;
-        opt.innerHTML = option;
-        select.appendChild(opt);
+    switch (parentSelected) {
+        case 'Europe':
+            for (const country of EUROPE_COUNTRIES) {
+                const option = document.createElement('option');
+                option.value = country;
+                option.text = country;
+                select.appendChild(option);
+            }
+            break;
+        case 'Amérique':
+            for (const country of AMERICA_COUNTRIES) {
+                const option = document.createElement('option');
+                option.value = country;
+                option.text = country;
+                select.appendChild(option);
+            }
+            break;
+        default:
+            throw new Error("Country not found");
+    }
+}
+
+export function updateSelectParented(selectParent, selectChild) {
+    const select = document.getElementById(selectParent);
+    let selectedVal = select.options[select.selectedIndex].value;
+    const selectChildElement = document.getElementById(selectChild);
+    selectChildElement.innerHTML = "";
+
+    let voidOption = document.createElement('option');
+    voidOption.value = "none";
+    voidOption.text = "";
+    selectChildElement.appendChild(voidOption);
+
+    switch (selectedVal) {
+        case 'Europe':
+            for (const country of EUROPE_COUNTRIES) {
+                const option = document.createElement('option');
+                option.value = country;
+                option.text = country;
+                selectChildElement.appendChild(option);
+            }
+            break;
+        case 'Amérique':
+            for (const country of AMERICA_COUNTRIES) {
+                const option = document.createElement('option');
+                option.value = country;
+                option.text = country;
+                selectChildElement.appendChild(option);
+            }
+            break;
+        default:
+            throw new Error("Country not found");
     }
 }
 

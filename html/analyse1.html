@@ -216,30 +216,57 @@
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
-      <div class="row">
+      <!-- Filtre Card -->
+      <div class="col-lg-12">
 
+        <div class="card info-card customers-card align-items-center">
+          <div class="card-body">
+            <h5 class="card-title">Option <span>| Filtre</span></h5>
+
+            <div class="d-flex row w-auto" id="selector">
+                <select class="form-select form-select-sm mb-2" id="selectorContinent">
+                  <option>Amérique</option>
+                  <option>Europe</option>
+                </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- End Customers Card -->
+      <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-8">
           <div class="row">
             <!-- Reports -->
-            <div class="col-xxl-12">
+            <div class="card-body pb-0">
               <div class="card">
-
                 <div class="card-body">
                   <h5 class="card-title">Rapport <span>| Revenu moyen d'un professionnel en fonction de son nombre d’années d’expérience</span></h5>
                   <!-- Line Chart -->
-                  <canvas id="barChartReport"></canvas>
-                  <div class="card-footer">
-                    <div class="row-cols-2" id="selector">
-
-                    </div>
-                  </div>
+                  <canvas id="barChartReport" class="chart-canvas w-auto"> </canvas>
                   <!-- End Line Chart -->
                 </div>
               </div>
-            </div><!-- End Reports -->
+            </div>
+            <!-- End Reports -->
           </div>
-        </div><!-- End Left side columns -->
+        </div>
+        <!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+        <!-- Reports -->
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Rapport <span>| Revenu moyen d'un professionnel en fonction de son nombre d’années d’expérience</span></h5>
+              <!-- Line Chart -->
+              <canvas id="poralAreaChartReport" class="chart-canvas w-auto"></canvas>
+              <!-- End Line Chart -->
+            </div>
+          </div>
+        </div>
+        <!-- End Reports -->
       </div>
     </section>
 

@@ -10,9 +10,8 @@ import {
     getNbDevById,
     getDevByCountry,
     loadLineChartNaN,
-    createSelect,
-    AMERICA_COUNTRIES, createBr,
-    EUROPE_COUNTRIES, loadPolarAreaChart
+    createSelect, loadPolarAreaChart,
+    updateSelectParented, updateChart
 } from './functions-libs.js';
 
 /**
@@ -59,16 +58,66 @@ function getMeanSalaryByEdu(data) {
     return meanSalaryByEdu;
 }
 
+function updateChartsWithSelect(chart, data, selectorId, parent, type, typeMean) {
+    let selectorValue = document.getElementById(selectorId);
+    let selectorParent = document.getElementById(parent);
+    let selected = selectorValue.options[selectorValue.selectedIndex].value;
+    if (selected === 'none'){
+        selected = selectorParent.options[selectorParent.selectedIndex].value;
+        type = 'continent';
+    }
+
+    let dataSelected = null;
+
+    if (type === 'country') {
+        dataSelected = getDevByCountry(data, selected);
+
+    } else if (type === 'continent') {
+        dataSelected = getDevDataByContinent(data, selected);
+    }
+
+    if (typeMean === 'expYears') {
+        let meanSalaryExpYears = getMeanSalaryByExpYears(dataSelected);
+        updateChart(chart, Object.keys(meanSalaryExpYears), Object.values(meanSalaryExpYears));
+    }
+    else if (typeMean === 'edu') {
+        let meanSalaryEdu = getMeanSalaryByEdu(dataSelected);
+        updateChart(chart, Object.keys(meanSalaryEdu), Object.values(meanSalaryEdu));
+    } else {
+        throw new Error('Type de moyenne inconnu');
+    }
+}
+
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
     const dataContinent = getDevDataByContinent(output, 'Europe');
     const dataPays = getDevByCountry(dataContinent, 'Netherlands');
-    let results = getMeanSalaryByExpYears(dataPays);
-    loadLineChartNaN(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','barChartReport');
-    loadPolarAreaChart(Object.keys(results), Object.values(results), 'Salaire annuel par an (en €)','poralAreaChartReport');
-    createSelect(["Amérique","Europe"],"selectorContinent","selector");
-    createBr("selector")
-    createSelect(EUROPE_COUNTRIES,"selectorPays","selector");
+    let meanSalaryExpYears = getMeanSalaryByExpYears(dataPays);
+    let meanSalaryEdu = getMeanSalaryByEdu(dataContinent);
+    let chartMeanExpYears= loadLineChartNaN(Object.keys(meanSalaryExpYears), Object.values(meanSalaryExpYears), 'Salaire annuel par an (en €)', 'barChartReport');
+    let chartMeanEdu = loadPolarAreaChart(Object.keys(meanSalaryEdu), Object.values(meanSalaryEdu), 'Salaire annuel par an (en €)', 'poralAreaChartReport');
+    createSelect('selector', 'selectorPays', 'selectorContinent')
+
+    const selectorContinent = document.getElementById('selectorContinent');
+    const selectorPays = document.getElementById('selectorPays');
+
+    // On met à jour le select des pays en fonction du continent sélectionné
+    selectorContinent.addEventListener('change', function () {
+        updateSelectParented('selectorContinent', 'selectorPays');
+    });
+
+    // On met à jour les graphiques en fonction du pays sélectionné
+    selectorPays.addEventListener('change', function () {
+        updateChartsWithSelect(chartMeanExpYears, output, 'selectorPays', 'selectorContinent','country', 'expYears');
+        updateChartsWithSelect(chartMeanEdu, output, 'selectorPays', 'selectorContinent','country', 'edu');
+    });
+
+    // On met à jour les graphiques en fonction du continent sélectionné
+    selectorContinent.addEventListener('change', function () {
+        updateChartsWithSelect(chartMeanExpYears, output, 'selectorContinent', null,'continent', 'expYears');
+        updateChartsWithSelect(chartMeanEdu, output, 'selectorContinent', null,'continent', 'edu');
+    });
+
 });
 
 // Code à exécuter en cas d'échec de la requête
