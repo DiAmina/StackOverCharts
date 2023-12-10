@@ -248,11 +248,18 @@ export function integrateData(data, id, detail= "") {
  */
 export function createSelect(parentId,id, selectFromId) {
     const divSelect = document.getElementById(parentId);
-    const parentSelected = document.getElementById(selectFromId).options[0].value;
+    const parentSelected = document.getElementById(selectFromId).value;
     const select = document.createElement('select');
     select.id = id;
     select.className = "form-select form-select-sm mb-2";
     divSelect.appendChild(select);
+
+    let titleOption = document.createElement('option');
+    titleOption.value = "Séléctionner un pays";
+    titleOption.text = "Séléctionner un pays";
+    titleOption.disabled = true;
+    select.appendChild(titleOption);
+
     let voidOption = document.createElement('option');
     voidOption.value = "none";
     voidOption.text = "";
@@ -277,6 +284,33 @@ export function createSelect(parentId,id, selectFromId) {
             break;
         default:
             throw new Error("Country not found");
+    }
+}
+
+export function createSelectData(parentId,id, data) {
+    const divSelect = document.getElementById(parentId);
+    const select = document.createElement('select');
+    select.id = id;
+    select.className = "form-select form-select-sm mb-2";
+    divSelect.appendChild(select);
+
+    let titleOption = document.createElement('option');
+    titleOption.value = "Séléctionner une année";
+    titleOption.text = "Séléctionner une année";
+    titleOption.disabled = true;
+    select.appendChild(titleOption);
+
+    let voidOption = document.createElement('option');
+    voidOption.value = "none";
+    voidOption.text = "";
+    voidOption.selected = true;
+    select.appendChild(voidOption);
+
+    for (const element of data) {
+        const option = document.createElement('option');
+        option.value = element;
+        option.text = element;
+        select.appendChild(option);
     }
 }
 
@@ -361,6 +395,12 @@ export function getDevByCountry(data, country) {
     return devData;
 }
 
+/**
+ * Renvoie les données des développeurs en fonction de l'année d'expérience donnée
+ * @param data - Données JSON
+ * @param years - Année d'expérience
+ * @returns {*[]} - Liste des développeurs en format JSON
+ */
 export function getDevByExpYEars(data, years) {
     let devData = [];
     for (const developer of data) {

@@ -1,12 +1,9 @@
 import {
-    computeMeanSalary,
+    createSelect, createSelectData,
     getDevByCountry,
     getDevByExpYEars,
-    getDevDataByContinent,
-    getDevSalaryById,
-    getNbDevById,
-    getValues,
-    unwind
+    getDevDataByContinent, getNbDevById,
+    getValues, loadBarChart, updateChart, updateSelectParented
 } from "./functions-libs.js";
 
 //envoi de la requete ajax
@@ -93,19 +90,105 @@ function getMeanSalaryByCloud(data) {
         }
         meanSalaryByCloud[cloud] = computeMeanSalaryByCloud(data, cloud);
     }
+
+    // tri du tableau par ordre décroissant des salaires
+    let sortable = [];
+    for (let cloud of Object.keys(meanSalaryByCloud)) {
+        sortable.push([cloud, meanSalaryByCloud[cloud]]);
+    }
+    sortable.sort(function(a, b) {
+        return b[1] - a[1];
+    });
+    meanSalaryByCloud = {};
+    for (let cloud of sortable) {
+        meanSalaryByCloud[cloud[0]] = cloud[1];
+    }
     return meanSalaryByCloud;
 }
 // ====== FIN SALAIRE MOYEN PAR PLATEFORME DE CLOUD ====== //
 
 
+// ====== PARAMETRES ====== //
+function updateChartsWithSelect(chart, data, selectorId, parent, type, typeMean) {
+    let selectorValue = document.getElementById(selectorId);
+    let selectorParent = document.getElementById(parent);
+    let selected = selectorValue.options[selectorValue.selectedIndex].value;
+    if (selected === 'none'){
+        selected = selectorParent.options[selectorParent.selectedIndex].value;
+        type = 'country';
+        // si le selector country est sur none, on met le selector sur le continent
+        selectorValue = document.getElementById('selectorPays');
+        selected = selectorValue.options[selectorValue.selectedIndex].value;
+        if (selected === 'none'){
+            selected = selectorParent.options[selectorParent.selectedIndex].value;
+            type = 'continent';
+        }
+    }
+
+    let dataSelected = null;
+
+    if (type === 'country') {
+        dataSelected = getDevByCountry(data, selected);
+    }
+
+    if (type === 'continent') {
+        dataSelected = getDevDataByContinent(data, selected);
+    }
+
+    if (type === 'expYears') {
+        if (!(dataSelected === null)) {
+            dataSelected = getDevByExpYEars(dataSelected, selected);
+        } else {
+            dataSelected = getDevByExpYEars(data, selected);
+        }
+    }
+
+    if (typeMean === 'cloud') {
+        let meanSalaryEdu = getMeanSalaryByCloud(dataSelected);
+        updateChart(chart, Object.keys(meanSalaryEdu), Object.values(meanSalaryEdu));
+    } else {
+        throw new Error('Type de moyenne inconnu');
+    }
+}
+// ====== FIN PARAMETRES ====== //
+
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
-    const dataContinent = getDevDataByContinent(output, 'Amérique');
-    const dataPays = getDevByCountry(dataContinent, 'Canada');
-    const dataExpYears = getDevByExpYEars(dataPays, '25');
-    let meanSalaryByCloud = getMeanSalaryByCloud(dataExpYears);
-    console.log("CLOUD TEST")
-    console.log(meanSalaryByCloud);
+    const dataContinent = getDevDataByContinent(output, 'Europe');
+    let meanSalaryByCloud = getMeanSalaryByCloud(dataContinent);
+    let chartMeanCloud = loadBarChart(
+        Object.keys(meanSalaryByCloud),
+        Object.values(meanSalaryByCloud),
+        'Salaire moyen annuel par an (en €)',
+        'barChartCloudPlatform'
+    );
+    createSelect('selector', 'selectorPays', 'selectorContinent');
+    createSelectData('selector', 'selectorYearsExp', Object.keys(getNbDevById(output, 'YearsCodePro')));
+
+    const selectorContinent = document.getElementById('selectorContinent');
+    const selectorPays = document.getElementById('selectorPays');
+    const selectorExpYears = document.getElementById('selectorYearsExp');
+
+    // On met à jour le select des pays en fonction du continent sélectionné
+    selectorContinent.addEventListener('change', function () {
+        updateSelectParented('selectorContinent', 'selectorPays');
+    });
+
+    // On met à jour les graphiques en fonction du continent sélectionné
+    selectorContinent.addEventListener('change', function () {
+        updateChartsWithSelect(chartMeanCloud, output, 'selectorContinent', null,'continent', 'cloud');
+    });
+
+    // On met à jour les graphiques en fonction du pays sélectionné
+    selectorPays.addEventListener('change', function () {
+        updateChartsWithSelect(chartMeanCloud, output, 'selectorPays', 'selectorContinent','country', 'cloud');
+    });
+
+    // On met à jour les graphiques en fonction de l'année d'expérience sélectionnée
+    selectorExpYears.addEventListener('change', function () {
+        updateChartsWithSelect(chartMeanCloud, output, 'selectorYearsExp', 'selectorContinent','expYears', 'cloud');
+    });
+
 });
 
 // Code à exécuter en cas d'échec de la requête
@@ -115,5 +198,3 @@ request.fail(function (httpError) {
     let code_label = httpError.statusText;
     alert("Erreur " + code + " (" + code_label + ") : " + server_msg);
 });
-
-
