@@ -30,6 +30,47 @@ export const AMERICA_COUNTRIES = [
     "Canada"
 ];
 
+/**
+ * Déroule les données d'un champ donné provenant d'un fichier JSON
+ * @param data
+ * @param field
+ * @returns {*[]}
+ */
+export function unwind(data, field) {
+    let unwinded = [];
+    for (const developer of data) {
+        if (developer[field]) {
+            let cloudPlatforms = developer[field].split(';');
+            for (const cloud of cloudPlatforms) {
+                if (cloud !== 'NA') {
+                    if (!unwinded.includes(cloud)) {
+                        unwinded.push(cloud);
+                    }
+                }
+            }
+        }
+    }
+    return unwinded;
+}
+
+// Eviter les duplications
+export function getValues(developer, devSalaries) {
+    if (!isNaN(parseFloat(developer['CompTotal']))) {
+        let currency = developer['Currency'];
+        let value = null;
+        if (currency !== 'EUR European Euro') {
+            value = (parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2);
+        } else {
+            value = parseFloat(developer['CompTotal']).toFixed(2);
+        }
+
+        // On ne prend pas en compte les salaires supérieurs à 1 000 000 € par an (abbération)
+        if (value < 1000000) {
+            devSalaries.push(value);
+        }
+    }
+}
+
 // LINE CHART
 export function loadLineChart(x, y, label,id) {
     let ctx = document.getElementById(id).getContext('2d');
@@ -320,6 +361,16 @@ export function getDevByCountry(data, country) {
     return devData;
 }
 
+export function getDevByExpYEars(data, years) {
+    let devData = [];
+    for (const developer of data) {
+        if (developer['YearsCodePro'] === years.toString()) {
+            devData.push(developer);
+        }
+    }
+    return devData;
+}
+
 /**
  * Convertit une devise en euro
  * @param currency - Devise
@@ -371,20 +422,7 @@ export function getDevSalaryById(data, value , attribut){
     for (const developer of data) {
         let attributData = developer[attribut];
         if (attributData === value) {
-            if (!isNaN(parseFloat(developer['CompTotal']))) {
-                let currency = developer['Currency'];
-                let value = null;
-                if (currency !== 'EUR European Euro') {
-                    value = (parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2);
-                } else {
-                    value = parseFloat(developer['CompTotal']).toFixed(2);
-                }
-
-                // On ne prend pas en compte les salaires supérieurs à 1 000 000 € par an (abbération)
-                if (value < 1000000) {
-                    devSalaries.push(value);
-                }
-            }
+            getValues(developer, devSalaries);
         }
     }
     return devSalaries;
@@ -394,14 +432,17 @@ export function getDevSalaryById(data, value , attribut){
  * Renvoie le salaire moyen des développeurs en fonction de l'attribut donné
  * @param data - Données JSON
  * @param value - Valeur de l'attribut
- * @param attribut - Attribut à prendre en compte
+ * @param field - Attribut à prendre en compte
  * @returns {number|string} - Salaire moyen
  */
-export function computeMeanSalary(data, value, attribut) {
-    let salaries = getDevSalaryById(data, value, attribut);
+export function computeMeanSalary(data, value, field) {
+    let salaries = getDevSalaryById(data, value, field);
     let sum = 0;
-    for (const salary of salaries) {sum += parseFloat(salary);}
-    let result = (sum / salaries.length).toFixed(2)
+    for (const salary of salaries) {
+        sum += parseFloat(salary);
+    }
+
+    let result = parseFloat((sum / salaries.length).toFixed(2));
     return result === 'NaN' ? NaN : result;
 }
 

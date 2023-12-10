@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Tableau de bord</title>
+  <title>Analyse </title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -67,7 +67,6 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
             <li>
               <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                 <i class="bi bi-person"></i>
@@ -206,75 +205,68 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Tableau de bord</h1>
+      <h1>Analyse 1</h1>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Accueil</a></li>
-          <li class="breadcrumb-item active">Tableau de bord</li>
+          <li class="breadcrumb-item active">Analyses</li>
+          <li class="breadcrumb-item active">Focus sur le revenu moyen en fonction de l’expérience professionnelle</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
-      <div class="row">
+      <!-- Filtre Card -->
+      <div class="col-lg-12">
 
+        <div class="card info-card customers-card align-items-center">
+          <div class="card-body">
+            <h5 class="card-title">Option <span>| Filtre</span></h5>
+
+            <div class="d-flex row w-auto" id="selector">
+                <select class="form-select form-select-sm mb-2" id="selectorContinent">
+                  <option>Amérique</option>
+                  <option>Europe</option>
+                </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- End Customers Card -->
+      <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-8">
           <div class="row">
-
-            <!-- Total Card -->
-            <div class="col-xxl-5 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title">Données récoltées</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi-graph-up"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 id="totalcount">Chargement...</h6>
-                      <span class="text-success small pt-1 fw-bold" id="tester"></span> <span class="text-muted small pt-2 ps-1">En tout</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Total Card -->
-
-            <!-- Remote Card -->
-            <div class="col-xxl-6 col-md-6">
-              <div class="card info-card revenue-card">
-                <div class="card-body">
-                  <h5 class="card-title">Employés <span>| En remote</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi-headset-vr"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 id="remotecount">Chargement...</h6>
-                      <span class="text-success small pt-1 fw-bold" id="remotepercentage">Chargement...</span> <span class="text-muted small pt-2 ps-1">des participants</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Remote Card -->
-
             <!-- Reports -->
-            <div class="col-12">
+            <div class="card-body pb-0">
               <div class="card">
-
                 <div class="card-body">
-                  <h5 class="card-title">Rapport <span>| Répartition des participants par pays</span></h5>
+                  <h5 class="card-title">Rapport <span>| Revenu moyen d'un professionnel en fonction de son nombre d’années d’expérience</span></h5>
                   <!-- Line Chart -->
-                  <canvas id="barChart"></canvas>
+                  <canvas id="barChartReport" class="chart-canvas w-auto"> </canvas>
                   <!-- End Line Chart -->
                 </div>
               </div>
-            </div><!-- End Reports -->
+            </div>
+            <!-- End Reports -->
           </div>
-        </div><!-- End Left side columns -->
+        </div>
+        <!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+        <!-- Reports -->
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Rapport <span>| Revenu moyen d'un professionnel en fonction de son nombre d’années d’expérience</span></h5>
+              <!-- Line Chart -->
+              <canvas id="poralAreaChartReport" class="chart-canvas w-auto"></canvas>
+              <!-- End Line Chart -->
+            </div>
+          </div>
+        </div>
+        <!-- End Reports -->
       </div>
     </section>
 
@@ -295,7 +287,7 @@
   <script src="../data/assets/tinymce/tinymce.min.js"></script>
 
   <script src="../js/main.js"></script>
-  <script src="../js/script_test.js"></script>
+  <script type="module" src="../js/script-analyse-1.js"></script>
 
 </body>
 
