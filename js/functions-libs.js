@@ -1,4 +1,3 @@
-// This file contains all the functions that are used in the project
 let currencyRequest = $.ajax({
     type: "GET",
     url: "../data/currencies.json"
@@ -53,6 +52,30 @@ export function unwind(data, field) {
     return unwinded;
 }
 
+/**
+ * Fonction renvoyant le nombre de développeurs ayant travaillé avec un field donné
+ * @param data
+ * @param field
+ * @returns {{}}
+ */
+export function getNbDevByFieldSplitted(data,field) {
+    let nbDevByField = {};
+    for (const developer of data) {
+        let devsFields = developer[field].split(';');
+        if (devsFields[0] === 'NA' || devsFields[0] === '' || devsFields.includes('NA')) {
+            continue;
+        }
+        for (const devField of devsFields){
+            if (nbDevByField[devField] === undefined) {
+                nbDevByField[devField] = 1;
+            } else {
+                nbDevByField[devField] += 1;
+            }
+        }
+    }
+    return nbDevByField;
+}
+
 // Eviter les duplications
 export function getValues(developer, devSalaries) {
     if (!isNaN(parseFloat(developer['CompTotal']))) {
@@ -65,7 +88,7 @@ export function getValues(developer, devSalaries) {
         }
 
         // On ne prend pas en compte les salaires supérieurs à 1 000 000 € par an (abbération)
-        if (value < 1000000) {
+        if (value < 1000000 && value > 1000) {
             devSalaries.push(value);
         }
     }
@@ -173,6 +196,34 @@ export function loadPieChart(x, y, label,id) {
     })
 }
 
+// DOUGHNUT CHART
+export function loadDoughnutChart(x, y, label,id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(255,64,64)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255,64,64)',
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                ],
+                hoverOffset: 4
+            }]
+        }
+    })
+}
+
 // BAR CHART
 export function loadBarChart(x, y, label,id) {
     let ctx = document.getElementById(id).getContext('2d');
@@ -195,6 +246,30 @@ export function loadBarChart(x, y, label,id) {
         options: {}
     });
 }
+
+// STACKED BAR CHART
+export function loadStackedBarChart(x, y, label, id) {
+    let ctx = document.getElementById(id).getContext('2d');
+    return new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: x,
+            datasets: y
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true
+                }
+            },
+            responsive: true
+        }
+    });
+}
+
 
 /**
  * Met à jour un graphique donné
@@ -301,7 +376,7 @@ export function createSelectData(parentId,id, data) {
     select.appendChild(titleOption);
 
     let voidOption = document.createElement('option');
-    voidOption.value = "none";
+    voidOption.value = 'none';
     voidOption.text = "";
     voidOption.selected = true;
     select.appendChild(voidOption);
@@ -445,6 +520,27 @@ export function getNbDevById(data,attribut) {
         }
     }
     return results;
+}
+
+/**
+ * Fonction renvoyant le salaire des développeurs ayant travaillé avec un field donné
+ * @param data - données des développeurs
+ * @param value - valeur du sélecteur
+ * @param field - champ à analyser
+ * @returns {*[]} - tableau des salaires
+ */
+export function getDevSalaryByFieldSplitted(data, value, field){
+    let devSalaries = [];
+    for (const developer of data) {
+        let devsFields = developer[field].split(';');
+        if (devsFields[0] === 'NA' || devsFields[0] === '' || devsFields.includes('NA')) {
+            continue;
+        }
+        if (devsFields.includes(value)) {
+            getValues(developer, devSalaries);
+        }
+    }
+    return devSalaries;
 }
 
 /**
