@@ -186,9 +186,14 @@ export function loadPieChart(x, y, label,id) {
                 label: label,
                 data: y,
                 backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
+                    'rgb(247,230,40)',
+                    'rgb(255,149,0)',
+                    'rgb(211,82,22)',
+                    'rgb(255,74,64)',
+                    'rgb(227,71,121)',
+                    'rgb(229,11,0)',
+                    'rgb(204,14,214)',
+                    'rgb(29,177,182)',
                 ],
                 hoverOffset: 4
             }]
@@ -242,16 +247,14 @@ export function loadDoughnutChart(x, y, label,id) {
                 label: label,
                 data: y,
                 backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)',
-                    'rgb(255,64,64)',
-                    'rgb(75, 192, 192)',
-                    'rgb(153, 102, 255)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255,64,64)',
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
+                    'rgb(247,230,40)',
+                    'rgb(255,160,26)',
+                    'rgb(255,110,46)',
+                    'rgb(255,74,64)',
+                    'rgb(227,71,121)',
+                    'rgb(255,27,16)',
+                    'rgb(204,14,214)',
+                    'rgb(90,29,222)',
                 ],
                 hoverOffset: 4
             }]
@@ -397,7 +400,7 @@ export function createSelect(parentId,id, selectFromId) {
     }
 }
 
-export function createSelectData(parentId,id, data) {
+export function createSelectData(parentId,id, data, title, voidOptionEnable=true) {
     const divSelect = document.getElementById(parentId);
     const select = document.createElement('select');
     select.id = id;
@@ -405,16 +408,18 @@ export function createSelectData(parentId,id, data) {
     divSelect.appendChild(select);
 
     let titleOption = document.createElement('option');
-    titleOption.value = "Séléctionner une année";
-    titleOption.text = "Séléctionner une année";
+    titleOption.value = title;
+    titleOption.text = title;
     titleOption.disabled = true;
     select.appendChild(titleOption);
 
-    let voidOption = document.createElement('option');
-    voidOption.value = 'none';
-    voidOption.text = "";
-    voidOption.selected = true;
-    select.appendChild(voidOption);
+    if (voidOptionEnable) {
+        let voidOption = document.createElement('option');
+        voidOption.value = "none";
+        voidOption.text = "";
+        voidOption.selected = true;
+        select.appendChild(voidOption);
+    }
 
     for (const element of data) {
         const option = document.createElement('option');

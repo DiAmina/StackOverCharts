@@ -1,6 +1,13 @@
 import config from './config.js';
 
-import {getDevDataByContinent, getNbDevByFieldSplitted, getNbDevById, loadStackedBarChart, createSelectData} from "./functions-libs.js";
+import {
+    getDevDataByContinent,
+    getNbDevByFieldSplitted,
+    getNbDevById,
+    loadStackedBarChart,
+    createSelectData,
+    createSelect, loadDoughnutChart, loadPieChart, updateChart
+} from "./functions-libs.js";
 
 // envoi de la requete ajax
 let request = $.ajax({
@@ -40,74 +47,81 @@ function getTopXUsedByDevType(data, devType, field) {
     return topX;
 }
 
-function getTopOsUsedByDevType(data){
+function getTopOsUsedByDevType(data, topX = 8){
     let topOsUsed = {};
     let devTypes = Object.keys(getNbDevById(data, 'DevType'));
     for (const devType of devTypes) {
         let topXUsed = Object.entries(getTopXUsedByDevType(data, devType, 'OpSysProfessionaluse'));
-        topOsUsed[devType] = topXUsed.slice(0, 3);
+        topOsUsed[devType] = topXUsed.slice(0, topX);
     }
-    return topOsUsed;
+
+    // sort by keys
+    let sorted = {};
+    Object.keys(topOsUsed).sort().forEach(function(key) {
+        sorted[key] = topOsUsed[key];
+    });
+    return sorted;
 }
 
-function getCountListByLanguage(data, language) {
-    let countList = [];
-    for (const job of data) {
-        for (const language of job[0]){
+function updateChartsWithSelect(chart, data, selectorDev, selectorCount,selectorContinent) {
+    let selectDevType = document.getElementById(selectorDev);
+    let selectCount = document.getElementById(selectorCount);
+    let selectContinent = document.getElementById(selectorContinent);
 
+    let devType = selectDevType.options[selectDevType.selectedIndex].value;
+    let count = selectCount.options[selectCount.selectedIndex].value;
+    let continent = selectContinent.options[selectContinent.selectedIndex].value;
 
-        }
-    }
-    return countList;
-
+    let dataContinent = getDevDataByContinent(data, continent);
+    let dataTop = getTopOsUsedByDevType(dataContinent,count);
+    let dataOsUsedByDevType = getOsUsedByDevType(dataTop, devType);
+    updateChart(chart, dataOsUsedByDevType[0], dataOsUsedByDevType[1]);
 }
 
+function getOsUsedByDevType(data, devType) {
+    let osNames = []; // noms des OS
+    let numbers = []; // nombres de devs utilisant l'OS
+    if (devType in data) {
+        let x_used = data[devType].forEach(element => {
+            osNames.push(element[0]);
+            numbers.push(element[1]);
+        });
+    }
+    return [osNames, numbers];
+}
 // ====================
-function getXOSCounts(data,field) {
-    const macOSCounts = [];
-
-    // Parcours des données
-    for (const category in data) {
-        const osList = data[category];
-        const macOSCount = osList.find(([os, count]) => os === field);
-        macOSCounts.push(macOSCount ? macOSCount[1] : 0);
-    }
-
-    return macOSCounts;
-}
-
-function createEntry(data, field) {
-    return {
-        label: field,
-        backgroundColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
-        data: getXOSCounts(data, field)
-    };
-}
-
-function createEntries(data1,data2) {
-    const entries = [];
-    const fields = Object.keys(getNbDevByFieldSplitted(data1, 'OpSysProfessionaluse'));
-    console.log(fields);
-    for (const field of fields) {
-        entries.push(createEntry(data2, field));
-    }
-    return entries;
-}
-
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
     const dataContinent = getDevDataByContinent(output, 'Europe');
-    let allDevTypes = Object.keys(getNbDevById(output, 'DevType'));
-    let dataTop = getTopOsUsedByDevType(dataContinent);
+    let allDevTypes = Object.keys(getNbDevById(output, 'DevType')).sort();
+    let dataTop = getTopOsUsedByDevType(dataContinent,5);
+    createSelectData('selector', 'selectorDevType', allDevTypes,"Sélectionnez un métier",false);
+    let data = getOsUsedByDevType(dataTop, allDevTypes[0]);
 
-    const data_ = createEntries(dataContinent,dataTop);
-    createSelectData('selector', 'selectorWork', Object.keys(getNbDevById(output, 'DevType')));
+    console.log(dataTop);
+    console.log(data);
 
-    //console.log(dataTop);
-    // console.log(data_);
+    let osChart = loadPieChart(data[0], data[1], 'OS','pieChartTopOS');
 
-    let chart = loadStackedBarChart(allDevTypes, data_, "TEST",'barChartTopOS');
+    // TODO: Rajoute le 2e chart ici
+
+
+    const selectDevType = document.getElementById('selectorDevType');
+    const selectCount = document.getElementById('selectorCount');
+    const selectContinent = document.getElementById('selectorContinent');
+
+    selectDevType.addEventListener('change', function () {
+        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent');
+    });
+
+    selectCount.addEventListener('change', function () {
+        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent');
+    });
+
+    selectContinent.addEventListener('change', function () {
+        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent');
+    });
 });
 
 // Code à exécuter en cas d'échec de la requête

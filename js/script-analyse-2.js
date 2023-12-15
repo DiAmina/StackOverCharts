@@ -196,7 +196,7 @@ request.done(function (output) {
         'scatterChartFrameWork'
     );
     createSelect('selector', 'selectorPays', 'selectorContinent');
-    createSelectData('selector', 'selectorYearsExp', Object.keys(getNbDevById(output, 'YearsCodePro')));
+    createSelectData('selector', 'selectorYearsExp', Object.keys(getNbDevById(output, 'YearsCodePro')),"Séléctionner une année");
 
     const selectorContinent = document.getElementById('selectorContinent');
     const selectorPays = document.getElementById('selectorPays');
