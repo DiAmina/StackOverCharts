@@ -196,6 +196,41 @@ export function loadPieChart(x, y, label,id) {
     })
 }
 
+export function scatterChart(x, y, label, id) {
+    let ctx = document.getElementById(id).getContext('2d');
+
+    return new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            labels: x,
+            datasets: [{
+                label: label,
+                data: y,
+                backgroundColor:
+                    'rgba(255, 159, 64, 1)'
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'category',
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// Fonction pour générer une couleur aléatoire au format hexadécimal
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 // DOUGHNUT CHART
 export function loadDoughnutChart(x, y, label,id) {
     let ctx = document.getElementById(id).getContext('2d');

@@ -5,7 +5,7 @@ import {
     getDevByCountry, getDevByExpYEars,
     getDevDataByContinent, getDevSalaryByFieldSplitted,
     getNbDevByFieldSplitted, getNbDevById,
-    loadBarChart, loadDoughnutChart,
+    loadBarChart, loadDoughnutChart, scatterChart,
     updateChart, updateSelectParented
 } from "./functions-libs.js";
 
@@ -189,11 +189,11 @@ request.done(function (output) {
         'barChartCloudPlatform'
     );
 
-    let chartMeanFrameWork = loadDoughnutChart(
+    let chartMeanFrameWork = scatterChart(
         Object.keys(getMeanSalaryByFrameWork(dataContinent)),
         Object.values(getMeanSalaryByFrameWork(dataContinent)),
         'Salaire moyen annuel par an (en €)',
-        'pieChartFrameWork'
+        'scatterChartFrameWork'
     );
     createSelect('selector', 'selectorPays', 'selectorContinent');
     createSelectData('selector', 'selectorYearsExp', Object.keys(getNbDevById(output, 'YearsCodePro')));

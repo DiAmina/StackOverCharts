@@ -1,6 +1,6 @@
 import config from './config.js';
 
-import {getDevDataByContinent, getNbDevByFieldSplitted, getNbDevById, loadStackedBarChart} from "./functions-libs.js";
+import {getDevDataByContinent, getNbDevByFieldSplitted, getNbDevById, loadStackedBarChart, createSelectData} from "./functions-libs.js";
 
 // envoi de la requete ajax
 let request = $.ajax({
@@ -102,6 +102,8 @@ request.done(function (output) {
     let dataTop = getTopOsUsedByDevType(dataContinent);
 
     const data_ = createEntries(dataContinent,dataTop);
+    createSelectData('selector', 'selectorWork', Object.keys(getNbDevById(output, 'DevType')));
+
     //console.log(dataTop);
     // console.log(data_);
 
