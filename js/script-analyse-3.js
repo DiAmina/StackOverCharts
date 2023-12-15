@@ -2,11 +2,8 @@ import config from './config.js';
 
 import {
     getDevDataByContinent,
-    getNbDevByFieldSplitted,
     getNbDevById,
-    loadStackedBarChart,
-    createSelectData,
-    createSelect, loadDoughnutChart, loadPieChart, updateChart
+    createSelectData, loadDoughnutChart, loadPieChart, updateChart
 } from "./functions-libs.js";
 
 // envoi de la requete ajax
@@ -106,7 +103,7 @@ function getOsUsedByDevType(data, devType) {
     let osNames = []; // noms des OS
     let numbers = []; // nombres de devs utilisant l'OS
     if (devType in data) {
-        let x_used = data[devType].forEach(element => {
+        data[devType].forEach(element => {
             osNames.push(element[0]);
             numbers.push(element[1]);
         });
@@ -118,7 +115,7 @@ function getComToolsUsedByDevType(data, devType) {
     let comToolsNames = []; // noms dees outils de com
     let numbers = []; // nombres de devs utilisant les outils de com
     if (devType in data) {
-        let x_used = data[devType].forEach(element => {
+        data[devType].forEach(element => {
             comToolsNames.push(element[0]);
             numbers.push(element[1]);
         });
@@ -156,7 +153,7 @@ request.done(function (output) {
 
     selectDevType.addEventListener('change', function () {
         updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'os');
-        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent'), 'comTools';
+        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'comTools');
     });
 
     selectCount.addEventListener('change', function () {

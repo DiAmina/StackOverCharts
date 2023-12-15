@@ -30,29 +30,6 @@ export const AMERICA_COUNTRIES = [
 ];
 
 /**
- * Déroule les données d'un champ donné provenant d'un fichier JSON
- * @param data
- * @param field
- * @returns {*[]}
- */
-export function unwind(data, field) {
-    let unwinded = [];
-    for (const developer of data) {
-        if (developer[field]) {
-            let cloudPlatforms = developer[field].split(';');
-            for (const cloud of cloudPlatforms) {
-                if (cloud !== 'NA') {
-                    if (!unwinded.includes(cloud)) {
-                        unwinded.push(cloud);
-                    }
-                }
-            }
-        }
-    }
-    return unwinded;
-}
-
-/**
  * Fonction renvoyant le nombre de développeurs ayant travaillé avec un field donné
  * @param data
  * @param field
@@ -80,7 +57,7 @@ export function getNbDevByFieldSplitted(data, field) {
 export function getValues(developer, devSalaries) {
     if (!isNaN(parseFloat(developer['CompTotal']))) {
         let currency = developer['Currency'];
-        let value = null;
+        let value;
         if (currency !== 'EUR European Euro') {
             value = (parseInt(developer['CompTotal']) * convertCurrencyToEuro(currency)).toFixed(2);
         } else {
@@ -92,29 +69,6 @@ export function getValues(developer, devSalaries) {
             devSalaries.push(value);
         }
     }
-}
-
-// LINE CHART
-export function loadLineChart(x, y, label, id) {
-    let ctx = document.getElementById(id).getContext('2d');
-    return new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: x,
-            datasets: [{
-                label: label,
-                data: y,
-                backgroundColor: [
-                    'rgba(16,57,147,0.8)',
-                ],
-                borderColor: [
-                    'rgb(180,196,245)',
-                ],
-                borderWidth: 3
-            }]
-        },
-        options: {}
-    });
 }
 
 // POLAR AREA CHART
@@ -226,16 +180,6 @@ export function scatterChart(x, y, label, id) {
     });
 }
 
-// Fonction pour générer une couleur aléatoire au format hexadécimal
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
 // DOUGHNUT CHART
 export function loadDoughnutChart(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
@@ -284,30 +228,6 @@ export function loadBarChart(x, y, label, id) {
         options: {}
     });
 }
-
-// STACKED BAR CHART
-export function loadStackedBarChart(x, y, label, id) {
-    let ctx = document.getElementById(id).getContext('2d');
-    return new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: x,
-            datasets: y
-        },
-        options: {
-            scales: {
-                x: {
-                    stacked: true,
-                },
-                y: {
-                    stacked: true
-                }
-            },
-            responsive: true
-        }
-    });
-}
-
 
 /**
  * Met à jour un graphique donné
@@ -462,12 +382,6 @@ export function updateSelectParented(selectParent, selectChild) {
     }
 }
 
-export function createBr(parentId) {
-    const divSelect = document.getElementById(parentId);
-    const br = document.createElement('br');
-    divSelect.appendChild(br);
-}
-
 /**
  * Retourne les données des développeurs en fonction du continent
  * @param data - Données JSON
@@ -543,7 +457,7 @@ export function convertCurrencyToEuro(currency) {
  * Renvoie le nombre de développeurs par id donnée
  * @param data - Données JSON
  * @param attribut - Attribut à prendre en compte
- * @returns {{}} - Nombre de développeurs par id [id: nbDev]
+ * @returns {{}} - Nombre de développeurs par id [id : nbDev]
  */
 export function getNbDevById(data, attribut) {
     let results = {};
@@ -586,7 +500,7 @@ export function getDevSalaryByFieldSplitted(data, value, field) {
 /**
  * Renvoie les salaires des développeurs de l'attribut donné
  *
- * Attention: Sachant que certains développeur n'ont pas renseigné leur salaire (CompTotal = 'NA'),
+ * Attention : Sachant que certain développeur n'ont pas renseigné leur salaire (CompTotal = 'NA'),
  * ils ne seront pas pris en compte
  * @param data - Données JSON
  * @param value - valeur de l'attribut
@@ -619,16 +533,5 @@ export function computeMeanSalary(data, value, field) {
     }
 
     let result = parseFloat((sum / salaries.length).toFixed(2));
-    return result === 'NaN' ? NaN : result;
-}
-
-/**
- * Renvoie le salaire le plus petit et le plus grand
- * @param data - Données JSON
- * @returns {number[]} - [Salaire minimum, Salaire maximum]
- */
-export function minMaxSalary(data) {
-    let min = Math.min(...data);
-    let max = Math.max(...data);
-    return [min, max];
+    return isNaN(result) ? NaN : result;
 }
