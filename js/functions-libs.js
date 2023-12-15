@@ -58,14 +58,14 @@ export function unwind(data, field) {
  * @param field
  * @returns {{}}
  */
-export function getNbDevByFieldSplitted(data,field) {
+export function getNbDevByFieldSplitted(data, field) {
     let nbDevByField = {};
     for (const developer of data) {
         let devsFields = developer[field].split(';');
         if (devsFields[0] === 'NA' || devsFields[0] === '' || devsFields.includes('NA')) {
             continue;
         }
-        for (const devField of devsFields){
+        for (const devField of devsFields) {
             if (nbDevByField[devField] === undefined) {
                 nbDevByField[devField] = 1;
             } else {
@@ -95,7 +95,7 @@ export function getValues(developer, devSalaries) {
 }
 
 // LINE CHART
-export function loadLineChart(x, y, label,id) {
+export function loadLineChart(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
     return new Chart(ctx, {
         type: 'line',
@@ -118,7 +118,7 @@ export function loadLineChart(x, y, label,id) {
 }
 
 // POLAR AREA CHART
-export function loadPolarAreaChart(x, y, label,id) {
+export function loadPolarAreaChart(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
     console.log("OK !");
     return new Chart(ctx, {
@@ -145,7 +145,7 @@ export function loadPolarAreaChart(x, y, label,id) {
 }
 
 // LINE CHART WITH NaN data
-export function loadLineChartNaN(x, y, label,id) {
+export function loadLineChartNaN(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
     const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
     const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
@@ -176,7 +176,7 @@ export function loadLineChartNaN(x, y, label,id) {
 }
 
 // PIE CHART
-export function loadPieChart(x, y, label,id) {
+export function loadPieChart(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
     return new Chart(ctx, {
         type: 'pie',
@@ -187,7 +187,7 @@ export function loadPieChart(x, y, label,id) {
                 data: y,
                 backgroundColor: [
                     'rgb(247,230,40)',
-                    'rgb(255,149,0)',
+                    'rgb(255,146,0)',
                     'rgb(211,82,22)',
                     'rgb(255,74,64)',
                     'rgb(227,71,121)',
@@ -237,7 +237,7 @@ function getRandomColor() {
 }
 
 // DOUGHNUT CHART
-export function loadDoughnutChart(x, y, label,id) {
+export function loadDoughnutChart(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
     return new Chart(ctx, {
         type: 'doughnut',
@@ -263,7 +263,7 @@ export function loadDoughnutChart(x, y, label,id) {
 }
 
 // BAR CHART
-export function loadBarChart(x, y, label,id) {
+export function loadBarChart(x, y, label, id) {
     let ctx = document.getElementById(id).getContext('2d');
     return new Chart(ctx, {
         type: 'bar',
@@ -344,7 +344,7 @@ export function getNbDevByCountry(data) {
  * @param {string} id - ID de la balise HTML
  * @param {string} detail - Détail à ajouter à la fin de la donnée
  */
-export function integrateData(data, id, detail= "") {
+export function integrateData(data, id, detail = "") {
     let element = document.getElementById(id);
     if (detail === "") {
         element.innerHTML = data;
@@ -359,7 +359,7 @@ export function integrateData(data, id, detail= "") {
  * @param id - ID du selecteur
  * @param selectFromId - ID du selecteur à partir duquel on crée le selecteur
  */
-export function createSelect(parentId,id, selectFromId) {
+export function createSelect(parentId, id, selectFromId) {
     const divSelect = document.getElementById(parentId);
     const parentSelected = document.getElementById(selectFromId).value;
     const select = document.createElement('select');
@@ -400,7 +400,7 @@ export function createSelect(parentId,id, selectFromId) {
     }
 }
 
-export function createSelectData(parentId,id, data, title, voidOptionEnable=true) {
+export function createSelectData(parentId, id, data, title, voidOptionEnable = true) {
     const divSelect = document.getElementById(parentId);
     const select = document.createElement('select');
     select.id = id;
@@ -545,7 +545,7 @@ export function convertCurrencyToEuro(currency) {
  * @param attribut - Attribut à prendre en compte
  * @returns {{}} - Nombre de développeurs par id [id: nbDev]
  */
-export function getNbDevById(data,attribut) {
+export function getNbDevById(data, attribut) {
     let results = {};
     for (const developer of data) {
         let label = developer[attribut];
@@ -569,7 +569,7 @@ export function getNbDevById(data,attribut) {
  * @param field - champ à analyser
  * @returns {*[]} - tableau des salaires
  */
-export function getDevSalaryByFieldSplitted(data, value, field){
+export function getDevSalaryByFieldSplitted(data, value, field) {
     let devSalaries = [];
     for (const developer of data) {
         let devsFields = developer[field].split(';');
@@ -593,7 +593,7 @@ export function getDevSalaryByFieldSplitted(data, value, field){
  * @param attribut - Attribut à prendre en compte
  * @returns {*[]} - Liste des salaires
  */
-export function getDevSalaryById(data, value , attribut){
+export function getDevSalaryById(data, value, attribut) {
     let devSalaries = []
     for (const developer of data) {
         let attributData = developer[attribut];

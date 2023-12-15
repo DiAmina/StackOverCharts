@@ -6,10 +6,8 @@ const config = {
     app_authors : "ANRIFOU AMDJAD & PREMI CARL",
     app_date : "2023",
 
-    // URL DES DONNEES
-    url: "../data/survey_results.json",
-    url_na: "../data/survey_results_NA.json",
-    url_we: "../data/survey_results_WE.json"
+    // Specifier le chemin vers le fichier JSON contenant les jeux de données
+    url: "../data/survey_results.json"
 }
 
 export default config;

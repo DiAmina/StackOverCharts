@@ -80,7 +80,7 @@ function getTopComToolsUsedByDevType(data, topX = 8){
 
 }
 
-function updateChartsWithSelect(chart, data, selectorDev, selectorCount,selectorContinent) {
+function updateChartsWithSelect(chart, data, selectorDev, selectorCount,selectorContinent, typeMean) {
     let selectDevType = document.getElementById(selectorDev);
     let selectCount = document.getElementById(selectorCount);
     let selectContinent = document.getElementById(selectorContinent);
@@ -90,14 +90,16 @@ function updateChartsWithSelect(chart, data, selectorDev, selectorCount,selector
     let continent = selectContinent.options[selectContinent.selectedIndex].value;
 
     let dataContinent = getDevDataByContinent(data, continent);
-    let dataTop = getTopOsUsedByDevType(dataContinent,count);
-    let dataOsUsedByDevType = getOsUsedByDevType(dataTop, devType);
-    updateChart(chart, dataOsUsedByDevType[0], dataOsUsedByDevType[1]);
 
-    //parti chart 2
-    let dataTop2 = getTopComToolsUsedByDevType(dataContinent,count);
-    let dataComToolsUsedByDevType = getComToolsUsedByDevType(dataTop2, devType);
-    updateChart(chart, dataComToolsUsedByDevType[0], dataComToolsUsedByDevType[1]);
+    if (typeMean === 'os') {
+        let dataTop = getTopOsUsedByDevType(dataContinent,count);
+        let dataOsUsedByDevType = getOsUsedByDevType(dataTop, devType);
+        updateChart(chart, dataOsUsedByDevType[0], dataOsUsedByDevType[1]);
+    } else if (typeMean === 'comTools') {
+        let dataTop2 = getTopComToolsUsedByDevType(dataContinent,count);
+        let dataComToolsUsedByDevType = getComToolsUsedByDevType(dataTop2, devType);
+        updateChart(chart, dataComToolsUsedByDevType[0], dataComToolsUsedByDevType[1]);
+    }
 }
 
 function getOsUsedByDevType(data, devType) {
@@ -133,7 +135,6 @@ request.done(function (output) {
     let dataTop = getTopOsUsedByDevType(dataContinent,5);
     createSelectData('selector', 'selectorDevType', allDevTypes,"Sélectionnez un métier",false);
     let data = getOsUsedByDevType(dataTop, allDevTypes[0]);
-
     console.log(dataTop);
     console.log(data);
 
@@ -154,18 +155,18 @@ request.done(function (output) {
     const selectContinent = document.getElementById('selectorContinent');
 
     selectDevType.addEventListener('change', function () {
-        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent');
-        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent')
+        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'os');
+        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent'), 'comTools';
     });
 
     selectCount.addEventListener('change', function () {
-        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent');
-        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent')
+        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'os');
+        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'comTools')
     });
 
     selectContinent.addEventListener('change', function () {
-        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent');
-        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent')
+        updateChartsWithSelect(osChart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'os');
+        updateChartsWithSelect(comToolchart, output, 'selectorDevType', 'selectorCount', 'selectorContinent', 'comTools')
     });
 
 });

@@ -1,8 +1,0 @@
-Pour le 2eme focus
-
-2.1
-On utilisera les meme focntions que pour le premier focus mais en fonction des plateformes de cloud avec lesquelles il a travaillé
-Ce qui veut dire qu'il faudra utilisé la clé "PlatformHaveWorkedWith" pour savoir si il a travaillé avec une plateforme de cloud et si oui laquelle
-
-2.2
-On utilisera la clé "WebframeHaveWorkedWith" pour savoir si il a travaillé avec un framework web et si oui lequel
