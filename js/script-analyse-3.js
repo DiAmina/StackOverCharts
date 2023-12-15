@@ -12,6 +12,13 @@ let request = $.ajax({
     url: config.url
 });
 
+/**
+ * Retourne un dictionnaire contenant les X outils les plus utilisés par les développeurs d'un certain type
+ * @param data
+ * @param devType
+ * @param field
+ * @returns {{}}
+ */
 function getTopXUsedByDevType(data, devType, field) {
     let topXUsed = {};
     for (const developer of data) {
@@ -44,6 +51,12 @@ function getTopXUsedByDevType(data, devType, field) {
     return topX;
 }
 
+/**
+ * Retourne un dictionnaire contenant les top OS les plus utilisés par les développeurs d'un certain type
+ * @param data
+ * @param topX
+ * @returns {{}}
+ */
 function getTopOsUsedByDevType(data, topX = 8){
     let topOsUsed = {};
     let devTypes = Object.keys(getNbDevById(data, 'DevType'));
@@ -60,6 +73,12 @@ function getTopOsUsedByDevType(data, topX = 8){
     return sorted;
 }
 
+/**
+ * Retourne un dictionnaire contenant les top outils de communication les plus utilisés par les développeurs d'un certain type
+ * @param data
+ * @param topX
+ * @returns {{}}
+ */
 function getTopComToolsUsedByDevType(data, topX = 8){
     let topComToolsUsed = {};
     let devTypes = Object.keys(getNbDevById(data, 'DevType'));
@@ -74,9 +93,17 @@ function getTopComToolsUsedByDevType(data, topX = 8){
         sorted[key] = topComToolsUsed[key];
     });
     return sorted;
-
 }
 
+/**
+ * Met à jour les charts en fonction des selects
+ * @param chart
+ * @param data
+ * @param selectorDev
+ * @param selectorCount
+ * @param selectorContinent
+ * @param typeMean
+ */
 function updateChartsWithSelect(chart, data, selectorDev, selectorCount,selectorContinent, typeMean) {
     let selectDevType = document.getElementById(selectorDev);
     let selectCount = document.getElementById(selectorCount);
@@ -99,6 +126,12 @@ function updateChartsWithSelect(chart, data, selectorDev, selectorCount,selector
     }
 }
 
+/**
+ * Retourne les OS utilisés par les développeurs d'un certain type
+ * @param data
+ * @param devType
+ * @returns {*[][]}
+ */
 function getOsUsedByDevType(data, devType) {
     let osNames = []; // noms des OS
     let numbers = []; // nombres de devs utilisant l'OS
@@ -111,6 +144,12 @@ function getOsUsedByDevType(data, devType) {
     return [osNames, numbers];
 }
 
+/**
+ * Retourne les outils de communication utilisés par les développeurs d'un certain type
+ * @param data
+ * @param devType
+ * @returns {*[][]}
+ */
 function getComToolsUsedByDevType(data, devType) {
     let comToolsNames = []; // noms dees outils de com
     let numbers = []; // nombres de devs utilisant les outils de com
@@ -123,7 +162,6 @@ function getComToolsUsedByDevType(data, devType) {
     return [comToolsNames, numbers];
 
 }
-// ====================
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {
@@ -132,20 +170,10 @@ request.done(function (output) {
     let dataTop = getTopOsUsedByDevType(dataContinent,5);
     createSelectData('selector', 'selectorDevType', allDevTypes,"Sélectionnez un métier",false);
     let data = getOsUsedByDevType(dataTop, allDevTypes[0]);
-    console.log(dataTop);
-    console.log(data);
-
     let osChart = loadPieChart(data[0], data[1], 'OS','pieChartTopOS');
-
-    // TODO: Rajoute le 2e chart ici
-
     let dataTop2 = getTopComToolsUsedByDevType(dataContinent,5);
     let data2 = getComToolsUsedByDevType(dataTop2, allDevTypes[0]);
-
-    console.log(data2);
-
     let comToolchart = loadDoughnutChart(data2[0], data2[1], 'Outils de communication','doughnutCommTool');
-
 
     const selectDevType = document.getElementById('selectorDevType');
     const selectCount = document.getElementById('selectorCount');

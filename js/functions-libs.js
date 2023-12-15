@@ -53,7 +53,11 @@ export function getNbDevByFieldSplitted(data, field) {
     return nbDevByField;
 }
 
-// Eviter les duplications
+/**
+ * Retourne le salaire des développeurs converti en euro
+ * @param developer
+ * @param devSalaries
+ */
 export function getValues(developer, devSalaries) {
     if (!isNaN(parseFloat(developer['CompTotal']))) {
         let currency = developer['Currency'];
@@ -320,6 +324,14 @@ export function createSelect(parentId, id, selectFromId) {
     }
 }
 
+/**
+ * Crée un selecteur HTML
+ * @param parentId
+ * @param id
+ * @param data
+ * @param title
+ * @param voidOptionEnable
+ */
 export function createSelectData(parentId, id, data, title, voidOptionEnable = true) {
     const divSelect = document.getElementById(parentId);
     const select = document.createElement('select');
@@ -349,6 +361,11 @@ export function createSelectData(parentId, id, data, title, voidOptionEnable = t
     }
 }
 
+/**
+ * Met à jour un selecteur HTML parenté
+ * @param selectParent
+ * @param selectChild
+ */
 export function updateSelectParented(selectParent, selectChild) {
     const select = document.getElementById(selectParent);
     let selectedVal = select.options[select.selectedIndex].value;

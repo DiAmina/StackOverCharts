@@ -65,6 +65,11 @@ function getMeanSalaryByCloud(data) {
     return meanSalaryByCloud;
 }
 
+/**
+ * Fonction renvoyant le salaire moyen en fonction des frameworks
+ * @param data
+ * @returns {{}}
+ */
 function getMeanSalaryByFrameWork(data) {
     let nbDevByFrameWork = getNbDevByFieldSplitted(data, 'WebframeHaveWorkedWith');
     let meanSalaryByFrameWork = {};
@@ -92,7 +97,15 @@ function getMeanSalaryByFrameWork(data) {
 }
 
 
-// ====== PARAMETRES ====== //
+/**
+ * Fonction mettant à jour les graphiques en fonction des sélecteurs
+ * @param chart
+ * @param data
+ * @param selectorId
+ * @param parent
+ * @param type
+ * @param typeMean
+ */
 function updateChartsWithSelect(chart, data, selectorId, parent, type, typeMean) {
     let selectorValue = document.getElementById(selectorId);
     let selected = selectorValue.options[selectorValue.selectedIndex].value;
@@ -176,7 +189,6 @@ function updateChartsWithSelect(chart, data, selectorId, parent, type, typeMean)
         updateChart(chart, Object.keys(meanSalaryByFrameWork), Object.values(meanSalaryByFrameWork));
     }
 }
-// ====== FIN PARAMETRES ====== //
 
 // Code à exécuter en cas de succès de la requête
 request.done(function (output) {

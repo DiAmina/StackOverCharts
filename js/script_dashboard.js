@@ -1,7 +1,9 @@
+import config from './config.js';
+
 // Envoi de la requête vers le fichier de données JSON
 let request = $.ajax({
     type: "GET",
-    url: "../data/survey_results.json"
+    url: config.url
 });
 
 import {
@@ -9,7 +11,11 @@ import {
     integrateData, getNbDevByCountry
 } from './functions-libs.js';
 
-// Fonction renvoyant le nombre de personnes travaillant en remote
+/**
+ * Fonction qui permet de compter le nombre de personnes travaillant en remote
+ * @param data
+ * @returns {(number|number)[]}
+ */
 function remoteWork(data) {
     let remote = 0;
     const remoteVariant = ['Hybrid (some remote, some in-person)','Remote'];

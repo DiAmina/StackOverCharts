@@ -19,7 +19,7 @@ import {
 /**
  * Renvoie la moyenne des salaires par années d'expérience
  * @param data - Données JSON
- * @returns {{}} - Moyenne des salaires par années d'expérience [yearsExp: meanSalary]
+ * @returns {{}} - Moyenne des salaires par années d'expérience [yearsExp : meanSalary]
  */
 function getMeanSalaryByExpYears(data) {
     let nbDevByExpYears = getNbDevById(data, 'YearsCodePro')
@@ -44,6 +44,11 @@ function getMeanSalaryByExpYears(data) {
     return meanSalaryByExpYears;
 }
 
+/**
+ * Renvoie la moyenne des salaires par niveau d'études
+ * @param data
+ * @returns {{}}
+ */
 function getMeanSalaryByEdu(data) {
     let nbDevByExpEdu = getNbDevById(data, 'EdLevel')
     let meanSalaryByEdu = {};
@@ -60,6 +65,15 @@ function getMeanSalaryByEdu(data) {
     return meanSalaryByEdu;
 }
 
+/**
+ * Met à jour les graphiques en fonction des éléments sélectionnés
+ * @param chart
+ * @param data
+ * @param selectorId
+ * @param parent
+ * @param type
+ * @param typeMean
+ */
 function updateChartsWithSelect(chart, data, selectorId, parent, type, typeMean) {
     let selectorValue = document.getElementById(selectorId);
     let selectorParent = document.getElementById(parent);
